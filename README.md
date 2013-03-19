@@ -1,4 +1,4 @@
 Regulate
 ========
 
-Some experimental form validation...
+Some experimental form validation.

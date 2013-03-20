@@ -56,14 +56,14 @@ describe('Regulate', function () {
 
   });
 
-  it('should validate my object with the given rules', function () {
+  it('should validate the given object and report back the results', function () {
     var cbs = {
       validate: function (error, data) {
         // TODO Write spec for handling error/data
       }
     };
       
-    spyOn(cbs, 'validate').andReturn(true);
+    spyOn(cbs, 'validate');
 
     Regulate.jobPost.validate(objData, cbs.validate);
   });

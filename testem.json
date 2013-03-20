@@ -1,0 +1,10 @@
+{
+  "src_files": [
+    "lib/*js",
+    "src/*js",
+    "tests/*"
+  ],
+  "launch_in_dev" : [
+    "Chrome"
+  ]
+}

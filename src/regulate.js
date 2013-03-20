@@ -14,19 +14,26 @@
     email: function (str) {
       var re = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
       return re.test(str);
-    }    
+    },
+
+    match_field: function(str, rules, fields) {
+      var result = false;
+      if ('match_field' in rules) {  
+        var targetField = rules.match_field;
+        _.each(fields, function (field) {
+          if (field.name === targetField) {
+            result = field.value === str;
+          }        
+        });
+      }
+      return result;
+    }
   };
 
   var Form = function (name, formRules) {    
     var self = this;
     self.rules = self._transformRules(formRules);
     self.cbs = [];
-
-    $(W.document).on('submit', '#'+name, function (e) {
-      e.preventDefault();
-      var formFields = $(this).serializeArray();
-      self._validate(formFields);
-    });
   };
 
   Form.prototype._notifySubmission = function (error, data) {
@@ -36,9 +43,13 @@
     });
   }
 
-  Form.prototype._validate = function (formFields) {
+  Form.prototype.validate = function (formFields, cb) {
     var self = this;
     var errors = {};
+
+    if (cb) {
+      self.cbs.push(cb);
+    }
 
     _.each(formFields, function (formField) {
       var fieldName = formField.name;
@@ -86,8 +97,15 @@
     return rules;
   };
 
-  Form.prototype.onSubmission = function(cb) {
-    this.cbs.push(cb);
+  Form.prototype.onSubmit = function (cb) {
+    var self = this;
+    self.cbs.push(cb);
+
+    $(W.document).on('submit', '#'+name, function (e) {
+      e.preventDefault();
+      var formFields = $(this).serializeArray();
+      self.validate(formFields);
+    });    
   };
 
   var Regulate = function (name, formRules) {
@@ -96,7 +114,7 @@
 
   Regulate.Rules = Rules;
 
-  Regulate.registerRule = function(ruleName, cb) {
+  Regulate.registerRule = function (ruleName, cb) {
     Rules[ruleName] = cb;
   };
 

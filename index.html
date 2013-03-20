@@ -1,15 +1,15 @@
 <head>
-  <title>Formulate for Meteor</title>
+  <title>regulate.js</title>
 </head>
 
 <body>
-  {{> jobform}}
+  <form id='jobform'>
+    <input type="text" name="title"/>
+    <input type="text" name="company"/>
+    <input type="text" name="email1"/>
+    <input type="text" name="email2"/>    
+    <input type="submit"/>
+  </form>
 </body>
 
-<template name="jobform">
-  <form id='jobform' class='form'>
-    <input name="jobtitle" id="jobtitle" type="text" />
-    <input name="jobemail" id="jobemail" type="text" />
-    <input name="jobsubmit" id="jobform-submit" type="submit" />
-  </form>
-</template>
+

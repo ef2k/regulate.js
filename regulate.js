@@ -94,6 +94,8 @@
     Regulate[name] = new Form(name, formRules);
   };
 
+  Regulate.Rules = Rules;
+
   Regulate.registerRule = function(ruleName, cb) {
     Rules[ruleName] = cb;
   };

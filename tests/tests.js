@@ -53,18 +53,19 @@ describe('Regulate', function () {
 
   it('should namespace my regulate object as a property of itself', function () {
     expect(Regulate.jobPost).toBeDefined();
-
   });
 
-  it('should validate the given object and report back the results', function () {
-    var cbs = {
-      validate: function (error, data) {
-        // TODO Write spec for handling error/data
-      }
-    };
-      
-    spyOn(cbs, 'validate');
-
-    Regulate.jobPost.validate(objData, cbs.validate);
+  it('should validate the given object and callback with the data', function () {
+    var spyCb = jasmine.createSpy();
+    Regulate.jobPost.validate(objData, spyCb);
+    expect(spyCb).toHaveBeenCalledWith(null, objData);
   });
+
+  it('should invalidate the given object and callback with an error', function () {
+    var spyCb2 = jasmine.createSpy();
+    objData[3].value = "unmatched@email.com";
+    Regulate.jobPost.validate(objData, spyCb2);
+    expect(spyCb2).toHaveBeenCalledWith({email1: ['match_field']}, null);
+    objData[3].value = "foo@bar.com";
+  });  
 });

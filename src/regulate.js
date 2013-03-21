@@ -30,6 +30,7 @@
     }
   };
 
+
   var Form = function (name, formRules) {    
     var self = this;
     self.rules = self._transformRules(formRules);
@@ -97,9 +98,14 @@
     return rules;
   };
 
-  Form.prototype.onSubmit = function (cb) {
+  Form.prototype._addCb = function (cb) {
     var self = this;
     self.cbs.push(cb);
+  };
+
+  Form.prototype.onSubmit = function (cb) {
+    var self = this;
+    self._addCb(cb);
 
     $(W.document).on('submit', '#'+name, function (e) {
       e.preventDefault();
@@ -108,14 +114,14 @@
     });    
   };
 
+
   var Regulate = function (name, formRules) {
     Regulate[name] = new Form(name, formRules);
+    Regulate.Rules = Rules;
   };
 
-  Regulate.Rules = Rules;
-
-  Regulate.registerRule = function (ruleName, cb) {
-    Rules[ruleName] = cb;
+  Regulate.registerRule = function (ruleName, testFn) {
+    Rules[ruleName] = testFn;
   };
 
   W.Regulate = Regulate;

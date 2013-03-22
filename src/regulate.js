@@ -33,6 +33,7 @@
 
   var Form = function (name, formRules) {    
     var self = this;
+    self.name = name;
     self.rules = self._transformRules(formRules);
     self.cbs = [];
   };
@@ -107,13 +108,13 @@
     var self = this;
     self._addCb(cb);
 
-    $(W.document).on('submit', '#'+name, function (e) {
+    $(document).on('submit', ('#'+self.name), function (e) {
+      console.log('submit was clicked!');
       e.preventDefault();
       var formFields = $(this).serializeArray();
       self.validate(formFields);
     });    
   };
-
 
   var Regulate = function (name, formRules) {
     Regulate[name] = new Form(name, formRules);

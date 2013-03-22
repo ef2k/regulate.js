@@ -11,6 +11,10 @@
       return rule.min_length ? (str.length >= rule.min_length) : false;
     },
 
+    exact_length: function (str, rule) {
+      return rule.exact_length ? (str.length === rule.exact_length) : false;
+    },
+
     email: function (str) {
       var re = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
       return re.test(str);

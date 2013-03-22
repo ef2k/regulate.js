@@ -12,6 +12,11 @@ describe('Rules',  function () {
     expect(Regulate.Rules.max_length('foobar', {max_length:5})).toBe(false);
   });
 
+  it('should check for the exact length', function () {
+    expect(Regulate.Rules.exact_length('foobar', {exact_length:6})).toBe(true);
+    expect(Regulate.Rules.exact_length('foobar', {exact_length:5})).toBe(false);    
+  });
+
   it('should check for a correctly formatted email', function () {
     expect(Regulate.Rules.email('foo@bar.com', {email: true})).toBe(true);
     expect(Regulate.Rules.email('foo@bar', {email: true})).toBe(false);    

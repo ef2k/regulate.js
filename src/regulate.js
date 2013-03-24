@@ -1,13 +1,28 @@
-// regulate.js
+/*
+ * Regulate.js
+ * http://github.com/eddflrs/regulate.js
+ * @author Eddie Flores
+ * @license MIT License
+ */
 
-(function (W, _, $, undefined) {
+/*jslint indent: 2 */
+/*jslint browser: true */
+/*jslint devel: true */
+/*jslint nomen: true */
+/*global _ */
+/*global jQuery */
+
+(function (W, _, $) {
+  "use strict";
+
+  var Rules, Form, Regulate;
 
   /*
    * @private 
-   * Object containing all validation rules.
+   * The object containing all validation rules.
    */
-  var Rules = {
-    max_length: function (str, rule) {   
+  Rules = {
+    max_length: function (str, rule) {
       return rule.max_length ? (str.length <= rule.max_length) : false;
     },
 
@@ -17,35 +32,36 @@
 
     exact_length: function (str, rule) {
       return rule.exact_length ? (str.length === rule.exact_length) : false;
-    },    
+    },
 
     email: function (str) {
       var re = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
       return re.test(str);
     },
-    
-    match_field: function(str, rules, fields) {
-      var result = false;
-      if ('match_field' in rules) {  
-        var targetField = rules.match_field;
+
+    match_field: function (str, rules, fields) {
+      var targetField, result = false;
+      if (rules.match_field) {
+        targetField = rules.match_field;
         _.each(fields, function (field) {
           if (field.name === targetField) {
             result = field.value === str;
-          }        
+          }
         });
       }
       return result;
     },
 
-    min_checked: function(none, rules, fields) {
-      console.log('Min checked called!');
-      if (!'min_checked' in rules) return false;
+    min_checked: function (none, rules, fields) {
+      if (!rules.min_checked) {
+        return false;
+      }
 
       console.log('fields: ', fields);
 
-      var cbs = _.filter(fields, function(field) {        
+      var cbs = _.filter(fields, function (field) {
         return field.name === rules.name;
-      }); 
+      });
       console.log("checkboxes", cbs.length);
       return cbs.length >= rules.min_checked;
     }
@@ -56,10 +72,10 @@
    * @constructor
    * Represents a form with validation requirements.
    */
-  var Form = function (name, formRules) {    
+  Form = function (name, formRules) {
     var self = this;
     self.name = name;
-    self.rules = self._transformRules(formRules);
+    self.rules = self.transformRules(formRules);
     self.cbs = [];
   };
 
@@ -67,7 +83,7 @@
    * @private
    * Calls all registered callbacks.
    */
-  Form.prototype._notifySubmission = function (error, data) {
+  Form.prototype.notifySubmission = function (error, data) {
     var self = this;
     _.each(self.cbs, function (cb) {
       cb(error, data);
@@ -85,26 +101,29 @@
    *    @agument data
    */
   Form.prototype.validate = function (formFields, cb) {
-    var self = this;
-    var errors = {};
+    var self = this, errors = {};
 
     if (cb) {
       self.cbs.push(cb);
     }
 
-    // What to do when checkboxes are not checked and as such, are not included in the formFields?
     _.each(formFields, function (formField) {
-      var fieldName = formField.name;
-      var fieldErrors = [];
+      var ruleName, fieldName, fieldErrors, fieldRules, ruleTest, testPassed;
 
-      if (!fieldName) return;
+      fieldName = formField.name;
+      fieldErrors = [];
 
-      var fieldRules = self.rules[fieldName];
+      if (!fieldName) {
+        return;
+      }
 
-      for (var ruleName in fieldRules) {
-        if (fieldRules.hasOwnProperty(ruleName) && ruleName in Rules) {
-          var ruleTest = Rules[ruleName];
-          var testPassed = ruleTest(formField.value, fieldRules, formFields);
+      fieldRules = self.rules[fieldName];
+
+      for (ruleName in fieldRules) {
+        if (fieldRules.hasOwnProperty(ruleName) && Rules[ruleName]) {
+
+          ruleTest = Rules[ruleName];
+          testPassed = ruleTest(formField.value, fieldRules, formFields);
           if (!testPassed) {
             fieldErrors.push(ruleName);
           }
@@ -116,32 +135,31 @@
     });
 
     if (_.isEmpty(errors)) {
-      self._notifySubmission(null, formFields);
+      self.notifySubmission(null, formFields);
     } else {
-      self._notifySubmission(errors, null);      
+      self.notifySubmission(errors, null);
     }
   };
-
 
   /* 
    * @private
    * Transforms the user defined rules into a data structure that's easier to 
    * work with.
    */
-  Form.prototype._transformRules = function (userStyleRules) {
-    var self = this;
+  Form.prototype.transformRules = function (userStyleRules) {
     var rules = {};
+
     _.each(userStyleRules, function (userRule) {
-      var fieldRule = {};
-      for (var p in userRule) {
+      var p, fieldRule = {};
+      for (p in userRule) {
         if (userRule.hasOwnProperty(p)) {
           fieldRule[p] = userRule[p];
-        }        
+        }
       }
       if (userRule.name) {
         rules[userRule.name] = fieldRule;
       }
-    });    
+    });
     return rules;
   };
 
@@ -150,7 +168,7 @@
    * Adds a callback to be called after validation.
    * @param cb - Function - callback.
    */
-  Form.prototype._addCb = function (cb) {
+  Form.prototype.addCb = function (cb) {
     var self = this;
     self.cbs.push(cb);
   };
@@ -164,13 +182,13 @@
    */
   Form.prototype.onSubmit = function (cb) {
     var self = this;
-    self._addCb(cb);
+    self.addCb(cb);
 
-    $(W.document).on('submit', ('#'+self.name), function (e) {
+    $(W.document).on('submit', ('#' + self.name), function (e) {
       e.preventDefault();
-      var formData = $(this).serializeArray();    
+      var formData = $(this).serializeArray();
       self.validate(formData);
-    });    
+    });
   };
 
   /*
@@ -180,10 +198,15 @@
    * @param name - String - The name of the form to be validated.
    * @param formRules - Array - The required rules for validation.
    */
-  var Regulate = function (name, formRules) {
+  Regulate = function (name, formRules) {
     Regulate[name] = new Form(name, formRules);
-    Regulate.Rules = Rules;
   };
+
+  /*
+   * @public
+   * The object containing all validation rules.
+   */
+  Regulate.Rules = Rules;
 
   /*
    * @public
@@ -193,12 +216,12 @@
    *    @return A boolean value that represents the validation result.
    */
   Regulate.registerRule = function (ruleName, testFn) {
-    if (ruleName in Rules) {
+    if (Regulate.Rules[ruleName]) {
       throw new Error(ruleName + " is already defined as a rule.");
     }
-    Rules[ruleName] = testFn;
+    Regulate.Rules[ruleName] = testFn;
   };
 
   W.Regulate = Regulate;
 
-})(window, _, jQuery);
+}(window, _, jQuery));

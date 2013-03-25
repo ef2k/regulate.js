@@ -110,9 +110,7 @@
     // ie: {fieldName: [fieldVal, ...], ...}    
     _.each(formFields, function (formField) {
       var name = formField.name, value = formField.value;
-      if (!transformedFieldValues[name]) {
-        transformedFieldValues[name] = [];
-      }
+      transformedFieldValues[name] = transformedFieldValues[name] || [];      
       transformedFieldValues[name].push(value);
     });
 

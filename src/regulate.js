@@ -22,6 +22,7 @@
    * The object containing all validation rules.
    */
   Rules = {
+
     max_length: function (str, rule) {
       return rule.max_length ? (str.length <= rule.max_length) : false;
     },
@@ -57,13 +58,11 @@
         return false;
       }
 
-      console.log('fields: ', fields);
-
-      var cbs = _.filter(fields, function (field) {
+      var checkboxes = _.filter(fields, function (field) {
         return field.name === rules.name;
       });
-      console.log("checkboxes", cbs.length);
-      return cbs.length >= rules.min_checked;
+
+      return checkboxes.length >= rules.min_checked;
     }
   };
 
@@ -72,10 +71,10 @@
    * @constructor
    * Represents a form with validation requirements.
    */
-  Form = function (name, formRules) {
+  Form = function (name, requirements) {
     var self = this;
     self.name = name;
-    self.rules = self.transformRules(formRules);
+    self.reqs = self.transformReqs(requirements);
     self.cbs = [];
   };
 
@@ -101,34 +100,45 @@
    *    @agument data
    */
   Form.prototype.validate = function (formFields, cb) {
-    var self = this, errors = {};
+    var self = this, errors = {}, transformedFieldValues = {};
 
     if (cb) {
       self.cbs.push(cb);
     }
 
+    // Restructure the form values so it's easier to check against the rules
+    // ie: {fieldName: [fieldVal, ...], ...}    
     _.each(formFields, function (formField) {
-      var ruleName, fieldName, fieldErrors, fieldRules, ruleTest, testPassed;
-
-      fieldName = formField.name;
-      fieldErrors = [];
-
-      if (!fieldName) {
-        return;
+      var name = formField.name, value = formField.value;
+      if (!transformedFieldValues[name]) {
+        transformedFieldValues[name] = [];
       }
+      transformedFieldValues[name].push(value);
+    });
 
-      fieldRules = self.rules[fieldName];
+    /* check against the validation requirements */
+    _.each(self.reqs, function (fieldReqs, fieldName) {
+      var fieldVals, fieldErrors = [];
 
-      for (ruleName in fieldRules) {
-        if (fieldRules.hasOwnProperty(ruleName) && Rules[ruleName]) {
+      fieldVals = transformedFieldValues[fieldName];
 
-          ruleTest = Rules[ruleName];
-          testPassed = ruleTest(formField.value, fieldRules, formFields);
-          if (!testPassed) {
-            fieldErrors.push(ruleName);
-          }
+      _.each(fieldReqs, function (reqVal, reqName) {
+
+        if (!fieldVals && reqName !== 'name') {
+          fieldErrors.push(reqName);
+          return;
         }
-      }
+
+        if (reqName !== 'name' && Rules.hasOwnProperty(reqName)) {
+          _.each(fieldVals, function (fieldVal) {
+            var testResult = Rules[reqName](fieldVal, fieldReqs, formFields);
+            if (!testResult) {
+              fieldErrors.push(reqName);
+            }
+          });
+        }
+      });
+
       if (fieldErrors.length > 0) {
         errors[fieldName] = fieldErrors;
       }
@@ -143,24 +153,24 @@
 
   /* 
    * @private
-   * Transforms the user defined rules into a data structure that's easier to 
-   * work with.
+   * Transforms the user requirements into a data structure that's easier to 
+   * work with. ie: {formName1: [{fieldRequirements}, ...], formName2: ...}
    */
-  Form.prototype.transformRules = function (userStyleRules) {
-    var rules = {};
+  Form.prototype.transformReqs = function (userRequirements) {
+    var transformedReqs = {};
 
-    _.each(userStyleRules, function (userRule) {
-      var p, fieldRule = {};
-      for (p in userRule) {
-        if (userRule.hasOwnProperty(p)) {
-          fieldRule[p] = userRule[p];
+    _.each(userRequirements, function (userReq) {
+      var reqName, fieldReq = {};
+      for (reqName in userReq) {
+        if (userReq.hasOwnProperty(reqName)) {
+          fieldReq[reqName] = userReq[reqName];
         }
       }
-      if (userRule.name) {
-        rules[userRule.name] = fieldRule;
+      if (userReq.name) {
+        transformedReqs[userReq.name] = fieldReq;
       }
     });
-    return rules;
+    return transformedReqs;
   };
 
   /*

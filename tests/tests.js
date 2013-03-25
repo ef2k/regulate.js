@@ -31,6 +31,7 @@ describe('Rules',  function () {
   it('should check for the minimum number of marked checkboxes', function () {
     var fields = [{name:'testCbs', value:'foo'}, {name:'testCbs', value:'boo'}];
     var rules = {name: 'testCbs', min_checked: 2};
+
     expect(Regulate.Rules.min_checked(null, rules, fields)).toBe(true);
     expect(Regulate.Rules.min_checked(null, {min_checked:2}), fields).toBe(false);
   });
@@ -78,5 +79,5 @@ describe('Regulate', function () {
     Regulate.jobPost.validate(objData, spyCb2);
     expect(spyCb2).toHaveBeenCalledWith({email1: ['match_field']}, null);
     objData[3].value = "foo@bar.com";
-  });  
+  });
 });

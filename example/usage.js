@@ -17,7 +17,8 @@ $(function() {
     name: 'password2',
     match_field: 'password1'
   }, {
-    name: 'newsletters'
+    name: 'newsletters',
+    min_checked: 2
   }]);
 
   Regulate.register.onSubmit(function(error, data) {

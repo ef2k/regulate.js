@@ -22,16 +22,16 @@ Rules included with Regulate.js
 **Checkboxes**
 
 * min_checked
-* max_checked
-* exact_checked
+* max_checked *Todo*
+* exact_checked *Todo*
 
-**Selects**
+**Selects** *Todo*
 
 * min_selected
 * max_selected
 * exact_selected
 
-**Radio**
+**Radio** *Todo*
 
 * Validation not necessary?
 

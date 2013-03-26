@@ -53,49 +53,64 @@
       return result;
     },
 
-    min_checked: function (fieldValue, fieldReqs, fields) {
-      if (!fieldReqs.min_checked) {
+    min_count: function (fieldName, fieldReqs, fields) {
+      if (!fieldReqs[fieldName]) {
         return false;
       }
 
-      var checkboxes = _.filter(fields, function (field) {
+      var items = _.filter(fields, function (field) {
         return field.name === fieldReqs.name;
       });
 
-      return checkboxes.length >= fieldReqs.min_checked;
+      return items.length >= fieldReqs[fieldName];
+    },
+
+    exact_count: function (fieldName, fieldReqs, fields) {
+      if (!fieldReqs[fieldName]) {
+        return false;
+      }
+
+      var items = _.filter(fields, function (field) {
+        return field.name === fieldReqs.name;
+      });
+
+      return items.length === fieldReqs[fieldName];
+    },
+
+    max_count: function (fieldName, fieldReqs, fields) {
+      if (!fieldReqs[fieldName]) {
+        return false;
+      }
+
+      var items = _.filter(fields, function (field) {
+        return field.name === fieldReqs.name;
+      });
+
+      return items.length <= fieldReqs[fieldName];
+    },
+
+    min_checked: function (fieldValue, fieldReqs, fields) {
+      return this.min_count('min_checked', fieldReqs, fields);
     },
 
     exact_checked: function (fieldValue, fieldReqs, fields) {
-      if (!fieldReqs.exact_checked) {
-        return false;
-      }
-      
-      var checkboxes = _.filter(fields, function (field) {
-        return field.name === fieldReqs.name;
-      });
-      
-      return checkboxes.length === fieldReqs.exact_checked;
+      return this.exact_count('exact_checked', fieldReqs, fields);
     },
-    
+
     max_checked: function (fieldValue, fieldReqs, fields) {
-      if (!fieldReqs.max_checked) {
-        return false;
-      }
-      
-      console.log("These are the cbs", fields);
-      
-      var checkboxes = _.filter(fields, function (field) {
-        console.log(">", field);
-        return field.name === fieldReqs.name;
-      });
-      
-      console.log("these are the checkboxes", checkboxes);
-      console.log("max checked: ", fieldReqs.max_checked);
+      return this.max_count('max_checked', fieldReqs, fields);
+    },
 
+    min_selected: function (fieldValue, fieldReqs, fields) {
+      return this.min_count('min_selected', fieldReqs, fields);
+    },
 
-      var result = checkboxes.length <= fieldReqs.max_checked;
-      console.log("These is the result of max_checked", result);
-      return result;
+    exact_selected: function (fieldValue, fieldReqs, fields) {
+      return this.exact_count('exact_selected', fieldReqs, fields);      
+    },
+
+    max_selected: function (fieldValue, fieldReqs, fields) {
+      return this.max_count('max_selected', fieldReqs, fields);
     }
   };
 

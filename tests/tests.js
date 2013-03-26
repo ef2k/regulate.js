@@ -29,33 +29,66 @@ describe('Rules',  function () {
   });
 
   it('should check that the value matches a value in another field', function () {
-    var rules = {match_field: 'baz'};
+    var successReqs = {match_field: 'baz'};
+    var failReqs = {match_field: 'zab'};
     var fields = [{name: 'baz', value: 'foobar'}];
-    expect(Regulate.Rules.match_field('foobar', rules, fields)).toBe(true);
+
+    expect(Regulate.Rules.match_field('foobar', successReqs, fields)).toBe(true);
+    expect(Regulate.Rules.match_field('foobar', failReqs, fields)).toBe(false);
   });
 
   it('should check for the minimum number of marked checkboxes', function () {
-    var rules = {name: 'cbs', min_checked: 2};
+    var successReqs = {name: 'cbs', min_checked: 2};
+    var failReqs = {name: 'cbs', min_checked: 3};
     var fields = [{name: 'cbs', value: 'foo'}, {name: 'cbs', value: 'boo'}];
 
-    expect(Regulate.Rules.min_checked(null, rules, fields)).toBe(true);
-    expect(Regulate.Rules.min_checked(null, {name: 'cbs', min_checked:3}, fields)).toBe(false);
+    expect(Regulate.Rules.min_checked(null, successReqs, fields)).toBe(true);
+    expect(Regulate.Rules.min_checked(null, failReqs, fields)).toBe(false);
   });
   
   it('should check for the exact number of marked checkboxes', function () {
-    var rules = {name: 'cbs', exact_checked: 2};
+    var successReqs = {name: 'cbs', exact_checked: 2};
+    var failReqs = {name: 'cbs', exact_checked: 1};
     var fields = [{name: 'cbs', value: 'foo'}, {name: 'cbs', value: 'boo'}];
 
-    expect(Regulate.Rules.exact_checked(null, rules, fields)).toBe(true);
-    expect(Regulate.Rules.exact_checked(null, {exact_checked: 1}, fields)).toBe(false);
+    expect(Regulate.Rules.exact_checked(null, successReqs, fields)).toBe(true);
+    expect(Regulate.Rules.exact_checked(null, failReqs, fields)).toBe(false);
   });
 
   it('should check for the maximum number of marked checkboxes', function () {
-    var rules = {name: 'cbs', max_checked: 2};
+    var successReqs = {name: 'cbs', max_checked: 2};
+    var failReqs = {name: 'cbs', max_checked: 1};
     var fields = [{name: 'cbs', value: 'foo'}, {name: 'cbs', value: 'boo'}];
 
-    expect(Regulate.Rules.max_checked(null, rules, fields)).toBe(true);
-    expect(Regulate.Rules.max_checked(null, {name: 'cbs', max_checked: 1}, fields)).toBe(false);
+    expect(Regulate.Rules.max_checked(null, successReqs, fields)).toBe(true);
+    expect(Regulate.Rules.max_checked(null, failReqs, fields)).toBe(false);
+  });
+
+  it('should check for the minimum number of options selected', function () {
+    var successReqs = {name: 'sel', min_selected: 1};
+    var failReqs = {name: 'sel', min_selected: 3};    
+    var fields = [{name: 'sel', value: 'foo'}, {name: 'sel', value: 'boo'}];
+
+    expect(Regulate.Rules.min_selected(null, successReqs, fields)).toBe(true);
+    expect(Regulate.Rules.min_selected(null, failReqs, fields)).toBe(false);
+  });
+
+  it('should check for the exact number of options selected', function () {
+    var successReqs = {name: 'sel', exact_selected: 2};
+    var failReqs = {name: 'sel', exact_selected: 3};    
+    var fields = [{name: 'sel', value: 'foo'}, {name: 'sel', value: 'boo'}];
+
+    expect(Regulate.Rules.exact_selected(null, successReqs, fields)).toBe(true);
+    expect(Regulate.Rules.exact_selected(null, failReqs, fields)).toBe(false);
+  });
+
+  it('should check for the maximum number of options selected', function () {
+    var successReqs = {name: 'sel', max_selected: 3};
+    var failReqs = {name: 'sel', max_selected: 1};    
+    var fields = [{name: 'sel', value: 'foo'}, {name: 'sel', value: 'boo'}];
+
+    expect(Regulate.Rules.max_selected(null, successReqs, fields)).toBe(true);
+    expect(Regulate.Rules.max_selected(null, failReqs, fields)).toBe(false);
   });
 });
 

@@ -53,16 +53,49 @@
       return result;
     },
 
-    min_checked: function (none, rules, fields) {
-      if (!rules.min_checked) {
+    min_checked: function (fieldValue, fieldReqs, fields) {
+      if (!fieldReqs.min_checked) {
         return false;
       }
 
       var checkboxes = _.filter(fields, function (field) {
-        return field.name === rules.name;
+        return field.name === fieldReqs.name;
       });
 
-      return checkboxes.length >= rules.min_checked;
+      return checkboxes.length >= fieldReqs.min_checked;
+    },
+
+    exact_checked: function (fieldValue, fieldReqs, fields) {
+      if (!fieldReqs.exact_checked) {
+        return false;
+      }
+      
+      var checkboxes = _.filter(fields, function (field) {
+        return field.name === fieldReqs.name;
+      });
+      
+      return checkboxes.length === fieldReqs.exact_checked;
+    },
+    
+    max_checked: function (fieldValue, fieldReqs, fields) {
+      if (!fieldReqs.max_checked) {
+        return false;
+      }
+      
+      console.log("These are the cbs", fields);
+      
+      var checkboxes = _.filter(fields, function (field) {
+        console.log(">", field);
+        return field.name === fieldReqs.name;
+      });
+      
+      console.log("these are the checkboxes", checkboxes);
+      console.log("max checked: ", fieldReqs.max_checked);
+
+
+      var result = checkboxes.length <= fieldReqs.max_checked;
+      console.log("These is the result of max_checked", result);
+      return result;
     }
   };
 
@@ -110,7 +143,7 @@
     // ie: {fieldName: [fieldVal, ...], ...}    
     _.each(formFields, function (formField) {
       var name = formField.name, value = formField.value;
-      transformedFieldValues[name] = transformedFieldValues[name] || [];      
+      transformedFieldValues[name] = transformedFieldValues[name] || [];
       transformedFieldValues[name].push(value);
     });
 

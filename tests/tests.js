@@ -1,5 +1,11 @@
 // tests.js
 
+/*global jasmine */
+/*global it */
+/*global describe */
+/*global expect */
+/*global Regulate*/
+
 describe('Rules',  function () {
 
   it('should check for the given minimum length', function () {
@@ -29,11 +35,27 @@ describe('Rules',  function () {
   });
 
   it('should check for the minimum number of marked checkboxes', function () {
-    var fields = [{name:'testCbs', value:'foo'}, {name:'testCbs', value:'boo'}];
-    var rules = {name: 'testCbs', min_checked: 2};
+    var rules = {name: 'cbs', min_checked: 2};
+    var fields = [{name: 'cbs', value: 'foo'}, {name: 'cbs', value: 'boo'}];
 
     expect(Regulate.Rules.min_checked(null, rules, fields)).toBe(true);
-    expect(Regulate.Rules.min_checked(null, {min_checked:2}), fields).toBe(false);
+    expect(Regulate.Rules.min_checked(null, {name: 'cbs', min_checked:3}, fields)).toBe(false);
+  });
+  
+  it('should check for the exact number of marked checkboxes', function () {
+    var rules = {name: 'cbs', exact_checked: 2};
+    var fields = [{name: 'cbs', value: 'foo'}, {name: 'cbs', value: 'boo'}];
+
+    expect(Regulate.Rules.exact_checked(null, rules, fields)).toBe(true);
+    expect(Regulate.Rules.exact_checked(null, {exact_checked: 1}, fields)).toBe(false);
+  });
+
+  it('should check for the maximum number of marked checkboxes', function () {
+    var rules = {name: 'cbs', max_checked: 2};
+    var fields = [{name: 'cbs', value: 'foo'}, {name: 'cbs', value: 'boo'}];
+
+    expect(Regulate.Rules.max_checked(null, rules, fields)).toBe(true);
+    expect(Regulate.Rules.max_checked(null, {name: 'cbs', max_checked: 1}, fields)).toBe(false);
   });
 });
 

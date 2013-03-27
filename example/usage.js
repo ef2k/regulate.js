@@ -2,8 +2,8 @@
 
 ;$(function() {
 
-  Regulate('register', 
-  [{
+  Regulate('register', [
+  {
     name: 'username',
     min_length: 6,
     max_length: 18

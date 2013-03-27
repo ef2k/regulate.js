@@ -1,55 +1,76 @@
+<!DOCTYPE html>
 <html>
 <head>
   <title>Sample usage for Regulate.js</title>
-
-  <link href="bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
-
-  
+ 
   <script src="../lib/jquery.js"></script>
-
-
   <script src="../lib/underscore.js"></script>
   <script src="../src/regulate.js"></script>
-
   <script src="usage.js"> </script>
+
+  <link href="bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
+  <script src="bootstrap/bootstrap.js"></script>
+  <script src="bootstrap/bootstrap-responsive.js"></script>
+
+
   <meta charset=utf-8 />
 </head>
 <body>
 <div class='container'>
-<h1>regulate.js</h1>
-
+  <h1>Regulate.js</h1>
+  <p>This is a sample form using Regulate for its validation.</p>
   <div class='row'>
   <div class='span6 pull-left'>
   <form id="register">
   <fieldset>
-    <input type="text" name="username" placeholder="Username"/>
-    <input type="text" name="email" placeholder="Email"/>
-    <input type="password" name="password1" placeholder="Password"/>
-    <input type="password" name="password2" placeholder="Confirm"/>
+    <div class='control-group'>
+      <input type="text" name="username" placeholder="Username"/>
+    </div>
 
-    <label class='checkbox'>
-      <input type="checkbox" name="newsletters" value="nyt"> New York Times    
-    </label>
-    
-    <label class='checkbox'>
-      <input type="checkbox" name="newsletters" value="nyp"> New York Post
-    </label>
-    
-    <label class='checkbox'>
-      <input type="checkbox" name="newsletters" value="ct"> Chicago Tribune
-    </label>
+    <div class='control-group'>
+      <input type="text" name="email" placeholder="Email"/>
+    </div>
 
+    <div class='control-group'>
+      <input type="password" name="password1" placeholder="Password"/>
+    </div>
+    
+    <div class='control-group'>
+      <input type="password" name="password2" placeholder="Confirm"/>
+    </div>
+
+    <div class='control-group'>
+      <label class='checkbox'>
+        <input type="checkbox" name="newsletters" value="nyt"> New York Times    
+      </label>
+
+      <label class='checkbox'>
+        <input type="checkbox" name="newsletters" value="nyp"> New York Post
+      </label>
+      
+      <label class='checkbox'>
+        <input type="checkbox" name="newsletters" value="ct"> Chicago Tribune
+      </label>
+    </div>
+
+
+    <div class='control-group'>
     <select name="selvalues">
       <option value="val1" selected>Value One</option>
       <option value="val2">Value Two</option>
       <option value="val3">Value Three</option>
     </select>
+    </div>
 
-    <select name="multivalues" multiple="multiple">
-      <option value="val1" selected>Value One</option>
-      <option value="val2">Value Two</option>
-      <option value="val3">Value Three</option>
-    </select>
+    <div class='control-group'>
+      <select name="multivalues" multiple="multiple">
+        <option value="val1" selected>Value One</option>
+        <option value="val2">Value Two</option>
+        <option value="val3">Value Three</option>
+      </select>
+    </div>
+
+
     </fieldset>
     <input type='submit' class='btn'/>
   </form>

@@ -1,8 +1,9 @@
 // usage.js
 
-$(function() {
+;$(function() {
 
-  Regulate('register', [{
+  Regulate('register', 
+  [{
     name: 'username',
     min_length: 6,
     max_length: 18
@@ -19,6 +20,10 @@ $(function() {
   }, {
     name: 'newsletters',
     min_checked: 2
+  }, {
+    name: 'multivalues',
+    max_selected: 2,
+    min_selected: 1
   }]);
 
   Regulate.register.onSubmit(function(error, data) {

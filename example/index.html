@@ -1,29 +1,43 @@
 <html>
 <head>
   <title>Sample usage for Regulate.js</title>
- 
+
+  <link href="bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
+
+  
   <script src="../lib/jquery.js"></script>
+
+
   <script src="../lib/underscore.js"></script>
   <script src="../src/regulate.js"></script>
 
   <script src="usage.js"> </script>
-
+  <meta charset=utf-8 />
 </head>
 <body>
+<div class='container'>
+<h1>regulate.js</h1>
+
+  <div class='row'>
+  <div class='span6 pull-left'>
   <form id="register">
-    <input name="username" type="text" placeholder="Username"/>
-    <input name="email" type="text" placeholder="Email"/>
-    <input name="password1" type="password" placeholder="Password"/>
-    <input name="password2" type="password" placeholder="Confirm"/>
+  <fieldset>
+    <input type="text" name="username" placeholder="Username"/>
+    <input type="text" name="email" placeholder="Email"/>
+    <input type="password" name="password1" placeholder="Password"/>
+    <input type="password" name="password2" placeholder="Confirm"/>
 
-    <input type="checkbox" name="newsletters" value="core"/>
-    <label>Core</label>    
+    <label class='checkbox'>
+      <input type="checkbox" name="newsletters" value="nyt"> New York Times    
+    </label>
     
-    <input type="checkbox" name="newsletters" value="talk"/>
-    <label>Talk</label>
-
-    <input type="checkbox" name="newsletters" value="misc"/>
-    <label>Misc</label>
+    <label class='checkbox'>
+      <input type="checkbox" name="newsletters" value="nyp"> New York Post
+    </label>
+    
+    <label class='checkbox'>
+      <input type="checkbox" name="newsletters" value="ct"> Chicago Tribune
+    </label>
 
     <select name="selvalues">
       <option value="val1" selected>Value One</option>
@@ -36,8 +50,11 @@
       <option value="val2">Value Two</option>
       <option value="val3">Value Three</option>
     </select>
-
-    <button>Register</button>
+    </fieldset>
+    <input type='submit' class='btn'/>
   </form>
+  </div>
+  </div> <!-- row -->
+  </div> <!-- container -->
 </body>
 </html>

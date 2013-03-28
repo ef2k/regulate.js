@@ -1,6 +1,8 @@
 // usage.js
 
-;$(function() {
+/*global Regulate */
+
+$(function() {
 
   Regulate('register', 
   [{

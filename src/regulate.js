@@ -15,7 +15,24 @@
 (function (W, _, $) {
   "use strict";
 
-  var Rules, Form, Regulate;
+  var Helpers, Rules, Messages, Form, Regulate;
+
+  /*
+   * @private
+   * A Namespace for helper functions.
+   */
+  Helpers = {
+    /*
+     * Formats a string. ie: format("{0} {1}", "hello", "world") => hello world
+     */
+    format: function (str) {
+      var i;
+      for (i = 0; i < arguments.length; i += 1) {
+        str = str.replace("{" + i + "}", arguments[i + 1]);
+      }
+      return str;
+    }
+  };
 
   /*
    * @private 
@@ -113,7 +130,55 @@
       return this.max_count('max_selected', fieldReqs, fields);
     }
   };
+  
+  /*
+   * @private
+   * The following messages are generated after a failed validation.
+   */
+  Messages = {
+    email: function (fieldName, fieldReqs) {
+      var message = "The {0} must be valid";
+      return Helpers.format(message, fieldName);      
+    },
 
+    max_length: function (fieldName, fieldReqs) {
+      var message = "The {0} must have a maximum length of {1}.";
+      return Helpers.format(message, fieldName, fieldReqs.max_length);
+    },
+    
+    min_length: function (fieldName, fieldReqs) {
+      console.log("min_length --> ", arguments);
+      var message = "The {0} must have a minimum length of {1}";
+      return Helpers.format(message, fieldName, fieldReqs.min_length);
+    },
+    
+    exact_length: function (fieldName, fieldReqs) {
+      var message = "The {0} must have an exact length of {1}";
+      return Helpers.format(message, fieldName, fieldReqs.exact_length);
+    },
+    
+    min_checked: function (fieldName, fieldReqs) {
+      var reqValue = fieldReqs.min_checked;      
+      var message = "Check atleast {0} checkbox";
+      message += (reqValue !== 1) ? "es" : ".";      
+      return Helpers.format(message, reqValue);
+    },    
+    
+    max_checked: function (fieldName, fieldReqs) {
+      var reqValue = fieldReqs.max_checked;
+      var message = "Check a maximum of {0} checkbox";
+      message += (reqValue !== 1) ? "es" : ".";
+      return message;
+    },
+    
+    exact_checked: function (fieldName, fieldReqs) {
+      var reqValue = fieldReqs.max_checked;
+      var message = "Check exactly {0} checkboxes";      
+      message += (reqValue !== 1) ? "es" : ".";
+      return message;
+    }
+  };
+   
   /*
    * @private
    * @constructor
@@ -169,17 +234,28 @@
       fieldVals = transformedFieldValues[fieldName];
 
       _.each(fieldReqs, function (reqVal, reqName) {
-
+        var error;
         if (!fieldVals && reqName !== 'name') {
-          fieldErrors.push(reqName);
+          if (Messages[reqName]) {
+            error = Messages[reqName](fieldName, fieldReqs);
+          } else {
+            error = reqName;
+          }
+          fieldErrors.push(error);
           return;
         }
 
         if (reqName !== 'name' && Rules.hasOwnProperty(reqName)) {
           _.each(fieldVals, function (fieldVal) {
-            var testResult = Rules[reqName](fieldVal, fieldReqs, formFields);
+            var error, testResult;
+            testResult = Rules[reqName](fieldVal, fieldReqs, formFields);
             if (!testResult) {
-              fieldErrors.push(reqName);
+              if (Messages[reqName]) {
+                error = Messages[reqName](fieldName, fieldReqs);
+              } else {
+                error = reqName;
+              }
+              fieldErrors.push(error);              
             }
           });
         }
@@ -260,9 +336,15 @@
 
   /*
    * @public
-   * The object containing all validation rules.
+   * Rules exposes all validation rules.
    */
   Regulate.Rules = Rules;
+  
+  /*
+   * @public
+   * Messages exposes all error message generators.
+   */
+  Regulate.Messages = Messages;
 
   /*
    * @public

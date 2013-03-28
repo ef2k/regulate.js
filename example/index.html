@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Sample usage for Regulate.js</title>
+  <title>Sample usage for regulate.js</title>
  
   <script src="../lib/jquery.js"></script>
   <script src="../lib/underscore.js"></script>
@@ -9,18 +9,22 @@
   <script src="usage.js"> </script>
 
   <link href="bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
+  <link href="bootstrap/bootstrap-responsive.css" rel="stylesheet" type="text/css" />
   <script src="bootstrap/bootstrap.js"></script>
-  <script src="bootstrap/bootstrap-responsive.js"></script>
-
+  
+  <link href="style.css" rel="stylesheet" type="text/css" />
 
   <meta charset=utf-8 />
 </head>
 <body>
 <div class='container'>
-  <h1>Regulate.js</h1>
-  <p>This is a sample form using Regulate for its validation.</p>
+  <header class="row">
+    <h1 class='logo serif'>regulate.js</h1>
+  </header>
+
   <div class='row'>
-  <div class='span6 pull-left'>
+  <div class='span6 pull-right'>
+  
   <form id="register">
   <fieldset>
     <div class='control-group'>
@@ -75,6 +79,11 @@
     <input type='submit' class='btn'/>
   </form>
   </div>
+  
+  <div class="span6 pull-left">
+    <script src="https://gist.github.com/eddflrs/5257884.js"></script>    
+  </div>
+  
   </div> <!-- row -->
   </div> <!-- container -->
 </body>

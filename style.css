@@ -1,0 +1,74 @@
+html, body {
+ background: #eee;
+}
+
+.cr-error ul{
+  color: red;
+  list-style: none;
+  font-size: small;
+  margin-left: 0px;
+}
+
+.cr-show-unit {
+  padding: 50px 0px;
+}
+
+.cr-btn-download {
+  margin-top: 20px;
+}
+
+.cr-caret-fix {
+  height: 22px;
+}
+
+.radio.inline, .checkbox.inline {
+    display: inline-block;
+    margin-bottom: 0;
+    padding-top: 5px;
+    vertical-align: middle;
+}
+
+.logo {
+ font-family: "deftone_stylusregular", Georgia, serif;
+ color: #333;
+ font-weight: normal;
+ font-size: 72px;
+ text-shadow: 2px 2px 2px #fff;
+}
+
+.border-thick {
+  border-top: 5px solid #333;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.btn-bronze {
+  background-color: hsl(54, 31%, 29%) !important;
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#a39b56", endColorstr="#605c33");
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#a39b56), to(#605c33));
+  background-image: -moz-linear-gradient(top, #a39b56, #605c33);
+  background-image: -ms-linear-gradient(top, #a39b56, #605c33);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #a39b56), color-stop(100%, #605c33));
+  background-image: -webkit-linear-gradient(top, #a39b56, #605c33);
+  background-image: -o-linear-gradient(top, #a39b56, #605c33);
+  background-image: linear-gradient(#a39b56, #605c33);
+  border-color: #605c33 #605c33 hsl(54, 31%, 24%);
+  color: #fff !important;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.33);
+  -webkit-font-smoothing: antialiased;
+}
+
+
+
+@font-face {
+    font-family: 'deftone_stylusregular';
+    src: url('fonts/deftone-webfont.eot');
+    src: url('fonts/deftone-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/deftone-webfont.woff') format('woff'),
+         url('fonts/deftone-webfont.ttf') format('truetype'),
+         url('fonts/deftone-webfont.svg#deftone_stylusregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}

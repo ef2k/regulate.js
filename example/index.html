@@ -1,60 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Sample usage for Regulate.js</title>
- 
+  <title>Sample usage for regulate.js</title>
+
   <script src="../lib/jquery.js"></script>
   <script src="../lib/underscore.js"></script>
   <script src="../src/regulate.js"></script>
   <script src="usage.js"> </script>
 
-  <link href="bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
-  <script src="bootstrap/bootstrap.js"></script>
-  <script src="bootstrap/bootstrap-responsive.js"></script>
+  <link href="bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+  <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet" type="text/css" />
+  <script src="bootstrap/js/bootstrap.js"></script>
 
+  <!--
+  <link href="gcp/prettify.css" rel="stylesheet" type="text/css" />
+  <script src="gcp/prettify.js"></script>
+  <script src="gcp/run_prettify.js"></script>
+  -->
+
+  <link href="style.css" rel="stylesheet" type="text/css" />
 
   <meta charset=utf-8 />
 </head>
 <body>
+<div class="border-thick"></div>
 <div class='container'>
-  <h1>Regulate.js</h1>
-  <p>This is a sample form using Regulate for its validation.</p>
+  <header class="row">
+    <div class="span12 cr-show-unit center">
+        <div class='pull-left'>
+          <h1 class='logo brand'>Regulate.js</h1>
+          <p>Hefty form validation in a lightweight script</p>
+        </div>
+
+        <div class="pull-right cr-btn-download">
+          <div class='btn-group'>
+            <a href="#downloads" class="btn btn-large btn-success"><i class="icon-download icon-white"></i> <strong><small>Download</small></strong></a>
+            <a class="btn btn-large btn-success cr-caret-fix dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="#downloads">Development - <small>regulate.js</small></a></li>
+              <li><a href="#downloads">Production - <small>regulate.min.js</small></a></li>
+              <li><a href="#downloads">Meteor Package</a></li>
+            </ul>
+          </div>
+        </div>
+    </div>
+  </header>
+
+
   <div class='row'>
-  <div class='span6 pull-left'>
-  <form id="register">
+    <div class="span12">
+      <h2>Overview</h2>
+      <p class='lead'>Regulate is a form validation library that was built to be versatile and customizable. It runs in the browser and can also be installed as a <a href="#">Meteor package</a> using Meteorite or <a href="#">via npm</a> for use with Node.</p>
+    </div>
+  </div>
+
+
+  <div class='row'>
+
+    <h2 class="span12">See it in action</h2>
+
+  <div class="span7">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#sample-js" data-toggle="tab">JavaScript</a></li>
+      <li><a href="#sample-html" data-toggle="tab">HTML</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="sample-js">
+        <script src="https://gist.github.com/eddflrs/5257884.js"></script>
+      </div>
+        <div class="tab-pane" id="sample-html">
+        <script src="https://gist.github.com/eddflrs/5273495.js"></script>
+      </div>
+    </div>
+  </div>
+
+  <div class='span5'>
+    <h4>Here goes a sample form</h4>
+  <form id="sampleForm">
   <fieldset>
     <div class='control-group'>
-      <input type="text" name="username" placeholder="Username"/>
+      <div class="controls">
+        <input type="text" name="username" placeholder="Username"/>
+        <div id="username-error" class="help-inline cr-error"></div>
+      </div>
     </div>
 
     <div class='control-group'>
       <input type="text" name="email" placeholder="Email"/>
+      <div id="email-error" class="help-inline cr-error"></div>
     </div>
 
     <div class='control-group'>
       <input type="password" name="password1" placeholder="Password"/>
+      <div id="password1-error" class="help-inline cr-error"></div>
     </div>
-    
+
     <div class='control-group'>
       <input type="password" name="password2" placeholder="Confirm"/>
+      <div id="password2-error" class="help-inline cr-error"></div>
     </div>
 
     <div class='control-group'>
+      <h5>Select 1 or 2 of these newspapers</h5>
       <label class='checkbox'>
-        <input type="checkbox" name="newsletters" value="nyt"> New York Times    
+        <input type="checkbox" name="newsletters" value="nyt"/> 
+        New York Times
       </label>
 
       <label class='checkbox'>
-        <input type="checkbox" name="newsletters" value="nyp"> New York Post
+        <input type="checkbox" name="newsletters" value="nyp"/> 
+        New York Post
       </label>
-      
+
       <label class='checkbox'>
-        <input type="checkbox" name="newsletters" value="ct"> Chicago Tribune
+        <input type="checkbox" name="newsletters" value="ct"/> 
+        Chicago Tribune
       </label>
+      <div id="newsletters-error" class="cr-error"></div>
     </div>
 
 
     <div class='control-group'>
+    <h5>Some select options that are optional</h5>
     <select name="selvalues">
       <option value="val1" selected>Value One</option>
       <option value="val2">Value Two</option>
@@ -63,11 +131,13 @@
     </div>
 
     <div class='control-group'>
+    <h5>Select exactly 2 of these</h5>
       <select name="multivalues" multiple="multiple">
         <option value="val1" selected>Value One</option>
         <option value="val2">Value Two</option>
         <option value="val3">Value Three</option>
       </select>
+      <div id="multivalues-error" class="help-inline cr-error"></div>
     </div>
 
 
@@ -75,7 +145,28 @@
     <input type='submit' class='btn'/>
   </form>
   </div>
-  </div> <!-- row -->
+
+  </div> <!-- .row -->
+
+  <div class="row">
+    <h2 class="span12" id="downloads">Downloads</h2>
+    <p class="span12"><strong>Note</strong> Regulate depends on jQuery and Underscore.js</p>
+
+    <div class="span6">
+    <a href="#" class="btn"><strong>Development</strong> <br /> <small>regulate.js</small></a>
+    <a href="#" class="btn"><strong>Production</strong> <br /> <small>regulate.min.js</small></a>
+    </div>
+
+  </div> <!-- .row -->
+
+  <div class="row">
+  <footer class="span12">
+    <hr />
+    <small><span class="pull-left"> Regulate.js is released under the MIT license and is <a href="http://github.com/eddflrs/regulate.js"> hosted on Github</a>.</span><span class="pull-right">Made by <a href="">Eddie Flores</a>.</span></small>
+  </footer>
+  </div>
+
+
   </div> <!-- container -->
 </body>
 </html>

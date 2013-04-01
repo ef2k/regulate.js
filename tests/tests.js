@@ -10,7 +10,7 @@ describe('Rules',  function () {
 
   it('should check for the given minimum length', function () {
     expect(Regulate.Rules.min_length('foobar', {min_length:5})).toBe(true);
-    expect(Regulate.Rules.min_length('foobar', {min_length:7})).toBe(false);    
+    expect(Regulate.Rules.min_length('foobar', {min_length:7})).toBe(false);
   });
 
   it('should check for the given maximum length', function () {
@@ -20,12 +20,12 @@ describe('Rules',  function () {
 
   it('should check for the exact length', function () {
     expect(Regulate.Rules.exact_length('foobar', {exact_length:6})).toBe(true);
-    expect(Regulate.Rules.exact_length('foobar', {exact_length:5})).toBe(false);    
+    expect(Regulate.Rules.exact_length('foobar', {exact_length:5})).toBe(false);
   });
 
   it('should check for a correctly formatted email', function () {
     expect(Regulate.Rules.email('foo@bar.com', {email: true})).toBe(true);
-    expect(Regulate.Rules.email('foo@bar', {email: true})).toBe(false);    
+    expect(Regulate.Rules.email('foo@bar', {email: true})).toBe(false);
   });
 
   it('should check that the value matches a value in another field', function () {
@@ -45,7 +45,7 @@ describe('Rules',  function () {
     expect(Regulate.Rules.min_checked(null, successReqs, fields)).toBe(true);
     expect(Regulate.Rules.min_checked(null, failReqs, fields)).toBe(false);
   });
-  
+
   it('should check for the exact number of marked checkboxes', function () {
     var successReqs = {name: 'cbs', exact_checked: 2};
     var failReqs = {name: 'cbs', exact_checked: 1};
@@ -66,7 +66,7 @@ describe('Rules',  function () {
 
   it('should check for the minimum number of options selected', function () {
     var successReqs = {name: 'sel', min_selected: 1};
-    var failReqs = {name: 'sel', min_selected: 3};    
+    var failReqs = {name: 'sel', min_selected: 3};
     var fields = [{name: 'sel', value: 'foo'}, {name: 'sel', value: 'boo'}];
 
     expect(Regulate.Rules.min_selected(null, successReqs, fields)).toBe(true);
@@ -75,7 +75,7 @@ describe('Rules',  function () {
 
   it('should check for the exact number of options selected', function () {
     var successReqs = {name: 'sel', exact_selected: 2};
-    var failReqs = {name: 'sel', exact_selected: 3};    
+    var failReqs = {name: 'sel', exact_selected: 3};
     var fields = [{name: 'sel', value: 'foo'}, {name: 'sel', value: 'boo'}];
 
     expect(Regulate.Rules.exact_selected(null, successReqs, fields)).toBe(true);
@@ -84,7 +84,7 @@ describe('Rules',  function () {
 
   it('should check for the maximum number of options selected', function () {
     var successReqs = {name: 'sel', max_selected: 3};
-    var failReqs = {name: 'sel', max_selected: 1};    
+    var failReqs = {name: 'sel', max_selected: 1};
     var fields = [{name: 'sel', value: 'foo'}, {name: 'sel', value: 'boo'}];
 
     expect(Regulate.Rules.max_selected(null, successReqs, fields)).toBe(true);
@@ -132,7 +132,7 @@ describe('Regulate', function () {
     var spyCb2 = jasmine.createSpy();
     objData[3].value = "unmatched@email.com";
     Regulate.jobPost.validate(objData, spyCb2);
-    expect(spyCb2).toHaveBeenCalledWith({email1: ['match_field']}, null);
+    expect(spyCb2).toHaveBeenCalled();
     objData[3].value = "foo@bar.com";
   });
 });

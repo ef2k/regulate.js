@@ -4,37 +4,48 @@
 
 $(function() {
 
-  Regulate('register', 
+  Regulate('sampleForm',
   [{
     name: 'username',
     min_length: 6,
-    max_length: 18
+    max_length: 18,
+    display_as: 'Username',
+    display_error: '#username-error'
   }, {
-    name: 'email',    
-    email: true
+    name: 'email',
+    email: true,
+    display_as: 'Email',
+    display_error: '#email-error'
   }, {
     name: 'password1',
     min_length: 6,
-    max_length: 12
+    max_length: 12,
+    display_as: 'Password',
+    display_error: '#password1-error'
   }, {
     name: 'password2',
-    match_field: 'password1'
+    match_field: 'password1',
+    display_as: 'Confirmation',
+    display_error: '#password2-error'
   }, {
     name: 'newsletters',
-    min_checked: 2
+    min_checked: 1,
+    max_checked: 2,
+    display_as: 'Newspapers',
+    display_error: '#newsletters-error'
   }, {
     name: 'multivalues',
-    max_selected: 2,
-    min_selected: 1
+    exact_selected: 2,
+    display_error: '#multivalues-error',
+    display_as: 'Multiselect'
   }]);
 
-  Regulate.register.onSubmit(function(error, data) {
+  Regulate.sampleForm.onSubmit(function(error, data) {
     if (error) {
-      alert('Validation failed!');
-      console.log(error);
+      console.error('Validation failed.');
+      console.log("These are the errors");
     } else {
-      alert('Validation passed!');
-      console.log(data);
+      console.log('Validation passed');
     }
   });
 });

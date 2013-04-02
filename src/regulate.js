@@ -11,11 +11,16 @@
 /*jslint nomen: true */
 /*global _ */
 /*global jQuery */
+/*global define */
 
-(function (W, _, $) {
+var jQuery = jQuery || {};
+
+(function (_, $) {
   "use strict";
 
-  var Helpers, Rules, Messages, Form, Regulate;
+  var W, Helpers, Rules, Messages, Form, Regulate;
+
+  W = this;
 
   /*
    * @private
@@ -451,4 +456,4 @@
 
   W.Regulate = Regulate;
 
-}(window, _, jQuery));
+}).call(this, _, jQuery);

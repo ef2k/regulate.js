@@ -11,7 +11,6 @@
 /*jslint nomen: true */
 /*global _ */
 /*global jQuery */
-/*global define */
 
 var jQuery = jQuery || {};
 
@@ -342,8 +341,6 @@ var jQuery = jQuery || {};
         errors[fieldName] = fieldErrors;
       }
     });
-
-    console.log('These were the transformed field vals', transformedFieldValues);
 
     if (_.isEmpty(errors)) {
       self.notifySubmission(null, formFields);

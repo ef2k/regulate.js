@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Sample usage for regulate.js</title>
+  <title>Regulate.js - A versatile validation library</title>
 
   <script src="lib/jquery.js"></script>
   <script src="lib/underscore.js"></script>
@@ -11,12 +11,6 @@
   <link href="bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
   <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet" type="text/css" />
   <script src="bootstrap/js/bootstrap.js"></script>
-
-  <!--
-  <link href="gcp/prettify.css" rel="stylesheet" type="text/css" />
-  <script src="gcp/prettify.js"></script>
-  <script src="gcp/run_prettify.js"></script>
-  -->
 
   <link href="style.css" rel="stylesheet" type="text/css" />
 
@@ -39,7 +33,7 @@
             <ul class="dropdown-menu">
               <li><a href="https://raw.github.com/eddflrs/regulate.js/master/src/regulate.js">Development - <small>regulate.js</small></a></li>
               <li><a href="https://raw.github.com/eddflrs/regulate.js/master/src/regulate.min.js">Production - <small>regulate.min.js</small></a></li>
-              <li><a href="#downloads">Meteor Package</a></li>
+              <li><a href="#meteorite">Meteor Package</a></li>
             </ul>
           </div>
         </div>
@@ -50,7 +44,7 @@
   <div class='row'>
     <div class="span12">
       <h2>Overview</h2>
-      <p class='lead'>Regulate is a form validation library that was built to be versatile and customizable. It runs in the browser and can also be installed as a <a href="#">Meteor package</a> using Meteorite or <a href="#">via npm</a> for use with Node.</p>
+      <p class='lead'>Regulate is a form validation library that was built to be versatile and customizable. It runs in the browser and can also be installed as a <a href="#meteorite">Meteor package</a> using Meteorite.</p>
     </div>
   </div>
 
@@ -151,12 +145,16 @@
   <div class="row">
     <h2 class="span12" id="downloads">Downloads</h2>
     <p class="span12"><strong>Note</strong> Regulate depends on jQuery and Underscore.js</p>
-
-    <div class="span6">
+    <div class="span6 offset6">
     <a href="https://raw.github.com/eddflrs/regulate.js/master/src/regulate.js" class="btn"><strong>Development</strong> <br /> <small>regulate.js</small></a>
     <a href="https://raw.github.com/eddflrs/regulate.js/master/src/regulate.min.js" class="btn"><strong>Production</strong> <br /> <small>regulate.min.js</small></a>
     </div>
 
+    <div id="meteorite" class="span6 offset6">
+      <h2>Use it with Meteor</h2>
+      <p>Regulate allows you to validate on both the client and server using the same rules. <em><strong>Note:</strong> A sample app and documentation will be coming soon!</em></p>
+      <pre>mrt add regulate.js</pre>
+    </div>
   </div> <!-- .row -->
 
   <div class="row">

@@ -3,24 +3,25 @@
  * http://github.com/eddflrs/regulate.js
  * @author Eddie Flores
  * @license MIT License
- * @version 0.1.3
+ * @version 0.1.3.1
  */
 
 /*jslint indent: 2 */
 /*jslint browser: true */
 /*jslint devel: true */
 /*jslint nomen: true */
+/*jslint unparam: true */
 /*global _ */
 /*global jQuery */
 
-var jQuery = jQuery || {};
+if (this.jQuery === undefined) {
+  this.jQuery = {};
+}
 
-(function (_, $) {
+(function (root, _, $) {
   "use strict";
 
-  var root, Helpers, Rules, Messages, Form, Regulate;
-
-  root = this;
+  var Helpers, Rules, Messages, Form, Regulate;
 
   /*
    * @private
@@ -182,43 +183,49 @@ var jQuery = jQuery || {};
     },
 
     min_checked: function (fieldName, fieldReqs) {
-      var reqValue = fieldReqs.min_checked;
-      var message = "Check atleast {0} checkbox";
+      var reqValue, message;
+      reqValue = fieldReqs.min_checked;
+      message = "Check atleast {0} checkbox";
       message += (reqValue !== 1) ? "es" : ".";
       return Helpers.format(message, reqValue);
     },
 
     max_checked: function (fieldName, fieldReqs) {
-      var reqValue = fieldReqs.max_checked;
-      var message = "Check a maximum of {0} checkbox";
+      var reqValue, message;
+      reqValue = fieldReqs.max_checked;
+      message = "Check a maximum of {0} checkbox";
       message += (reqValue !== 1) ? "es" : ".";
       return Helpers.format(message, reqValue);
     },
 
     exact_checked: function (fieldName, fieldReqs) {
-      var reqValue = fieldReqs.exact_checked;
-      var message = "Check exactly {0} checkboxes";
+      var reqValue, message;
+      reqValue = fieldReqs.exact_checked;
+      message = "Check exactly {0} checkboxes";
       message += (reqValue !== 1) ? "es" : ".";
       return Helpers.format(message, reqValue);
     },
 
     min_selected: function (fieldName, fieldReqs) {
-      var reqValue = fieldReqs.min_selected;
-      var message = "Select atleast {0} option";
+      var reqValue, message;
+      reqValue = fieldReqs.min_selected;
+      message = "Select atleast {0} option";
       message += (reqValue !== 1) ? "s" : ".";
       return Helpers.format(message, reqValue);
     },
 
     max_selected: function (fieldName, fieldReqs) {
-      var reqValue = fieldReqs.max_selected;
-      var message = "Select a maximum of {0} option";
+      var reqValue, message;
+      reqValue = fieldReqs.max_selected;
+      message = "Select a maximum of {0} option";
       message += (reqValue !== 1) ? "s" : ".";
       return Helpers.format(message, reqValue);
     },
 
     exact_selected: function (fieldName, fieldReqs) {
-      var reqValue = fieldReqs.exact_selected;
-      var message = "Select exactly {0} option";
+      var reqValue, message;
+      reqValue = fieldReqs.exact_selected;
+      message = "Select exactly {0} option";
       message += (reqValue !== 1) ? "s" : ".";
       return Helpers.format(message, reqValue);
     }
@@ -245,7 +252,7 @@ var jQuery = jQuery || {};
     var self = this;
 
     _.each(errors, function (errorMsgs, errorName) {
-      var i, elem, ul, errorElem;
+      var i, ul, errorElem;
 
       errorElem = self.errorElems[errorName] || '';
 
@@ -402,7 +409,7 @@ var jQuery = jQuery || {};
     self.addCb(cb);
     self.isBrowser = true;
 
-    $(root.document).on('submit', ('#' + self.name), function (e) {
+    $('#' + self.name).on('submit', function (e) {
       e.preventDefault();
 
       // Clear previous errors
@@ -457,4 +464,4 @@ var jQuery = jQuery || {};
 
   root.Regulate = Regulate;
 
-}).call(this, _, jQuery);
+}(this, _, jQuery));

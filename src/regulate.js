@@ -17,9 +17,9 @@ var jQuery = jQuery || {};
 (function (_, $) {
   "use strict";
 
-  var W, Helpers, Rules, Messages, Form, Regulate;
+  var root, Helpers, Rules, Messages, Form, Regulate;
 
-  W = this;
+  root = this;
 
   /*
    * @private
@@ -293,7 +293,7 @@ var jQuery = jQuery || {};
     // Restructure the form values so it's easier to check against the rules
     // ie: {fieldName: [fieldVal, ...], ...}
     _.each(formFields, function (formField) {
-      var name = formField.name, value = formField.value;
+      var name = formField.name, value = formField.value.trim();
       transformedFieldValues[name] = transformedFieldValues[name] || [];
       if (value) {
         transformedFieldValues[name].push(value);
@@ -401,7 +401,7 @@ var jQuery = jQuery || {};
     self.addCb(cb);
     self.isBrowser = true;
 
-    $(W.document).on('submit', ('#' + self.name), function (e) {
+    $(root.document).on('submit', ('#' + self.name), function (e) {
       e.preventDefault();
 
       // Clear previous errors
@@ -451,6 +451,6 @@ var jQuery = jQuery || {};
     Regulate.Rules[ruleName] = testFn;
   };
 
-  W.Regulate = Regulate;
+  root.Regulate = Regulate;
 
 }).call(this, _, jQuery);

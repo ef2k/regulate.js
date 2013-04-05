@@ -3,6 +3,7 @@
  * http://github.com/eddflrs/regulate.js
  * @author Eddie Flores
  * @license MIT License
+ * @version 0.1.3
  */
 
 /*jslint indent: 2 */
@@ -422,6 +423,9 @@ var jQuery = jQuery || {};
    * @param formRules - Array - The required rules for validation.
    */
   Regulate = function (name, formRules) {
+    if (Regulate[name]) {
+      throw new Error(name + 'is already being validated');
+    }
     Regulate[name] = new Form(name, formRules);
   };
 

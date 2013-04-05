@@ -1,4 +1,4 @@
 Regulate.js
 ===========
 
-Some experimental form validation.
+A versatile validation library.

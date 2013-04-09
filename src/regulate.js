@@ -21,28 +21,7 @@ if (this.jQuery === undefined) {
 (function (root, _, $) {
   "use strict";
 
-  var Helpers, Rules, Messages, Form, Regulate;
-
-  /*
-   * @private
-   * A namespace for helper functions.
-   */
-  Helpers = {
-
-    /*
-     * Formats a string. ie: format("{0} {1}", "hello", "world") => hello world
-     */
-    format: function (str) {
-      var i, args, s = str;
-      args = Array.prototype.splice.call(arguments, 1);
-
-      for (i = 0; i < args.length; i += 1) {
-        s = s.replace("{" + i + "}", args[i]);
-      }
-
-      return s;
-    }
-  };
+  var Rules, Messages, Form, Regulate, MessageTranslations, Messages_en;
 
   /*
    * @private
@@ -145,91 +124,95 @@ if (this.jQuery === undefined) {
    * @private
    * The following messages are generated after a failed validation.
    */
-  Messages = {
+  Messages_en = {
     required: function (fieldName, fieldReqs) {
-      var message, lastChar, verb;
-      message = "{0} {1} required.";
+      var lastChar, verb;
       lastChar = fieldName.charAt(fieldName.length - 1);
       verb = (lastChar === 's') ? 'are' : 'is';
-      return Helpers.format(message, fieldName, verb);
+      return fieldName + " " + verb + " required.";
     },
 
     email: function (fieldName, fieldReqs) {
-      var message = "{0} must be a valid email.";
-      return Helpers.format(message, fieldName);
+      return fieldName + " must be a valid email.";
     },
 
     match_field: function (fieldName, fieldReqs, formReqs) {
-      var matchName, displayName, matchField, message = "{0} must match {1}.";
+      var matchName, displayName, matchField;
       matchField = fieldReqs.match_field;
       matchName = formReqs[matchField].display_as || matchField;
       displayName = fieldReqs.display_as || fieldReqs.name;
-      return Helpers.format(message, displayName, matchName);
+      return displayName + " must match " + matchName;
     },
 
     max_length: function (fieldName, fieldReqs) {
-      var message = "{0} must have a maximum length of {1}.";
-      return Helpers.format(message, fieldName, fieldReqs.max_length);
+      var maxLength = fieldReqs.max_length;
+      return fieldName + " must have a maximum length of " + maxLength + ".";
     },
 
     min_length: function (fieldName, fieldReqs) {
-      var message = "{0} must have a minimum length of {1}.";
-      return Helpers.format(message, fieldName, fieldReqs.min_length);
+      var minLength = fieldReqs.min_length;
+      return fieldName + " must have a minimum length of " + minLength + ".";
     },
 
     exact_length: function (fieldName, fieldReqs) {
-      var message = "{0} must have an exact length of {1}.";
-      return Helpers.format(message, fieldName, fieldReqs.exact_length);
+      var exactLength = fieldReqs.exact_length;
+      return fieldName + " must have an exact length of " + exactLength + ".";
     },
 
     min_checked: function (fieldName, fieldReqs) {
       var reqValue, message;
       reqValue = fieldReqs.min_checked;
-      message = "Check atleast {0} checkbox";
+      message = "Check atleast " + reqValue + " checkbox";
       message += (reqValue !== 1) ? "es" : ".";
-      return Helpers.format(message, reqValue);
+      return message;
     },
 
     max_checked: function (fieldName, fieldReqs) {
       var reqValue, message;
       reqValue = fieldReqs.max_checked;
-      message = "Check a maximum of {0} checkbox";
+      message = "Check a maximum of " + reqValue + " checkbox";
       message += (reqValue !== 1) ? "es" : ".";
-      return Helpers.format(message, reqValue);
+      return message;
     },
 
     exact_checked: function (fieldName, fieldReqs) {
       var reqValue, message;
       reqValue = fieldReqs.exact_checked;
-      message = "Check exactly {0} checkboxes";
+      message = "Check exactly " + reqValue + " checkbox";
       message += (reqValue !== 1) ? "es" : ".";
-      return Helpers.format(message, reqValue);
+      return message;
     },
 
     min_selected: function (fieldName, fieldReqs) {
       var reqValue, message;
       reqValue = fieldReqs.min_selected;
-      message = "Select atleast {0} option";
+      message = "Select atleast " + reqValue + " option";
       message += (reqValue !== 1) ? "s" : ".";
-      return Helpers.format(message, reqValue);
+      return message;
     },
 
     max_selected: function (fieldName, fieldReqs) {
       var reqValue, message;
       reqValue = fieldReqs.max_selected;
-      message = "Select a maximum of {0} option";
+      message = "Select a maximum of " + reqValue + " option";
       message += (reqValue !== 1) ? "s" : ".";
-      return Helpers.format(message, reqValue);
+      return message;
     },
 
     exact_selected: function (fieldName, fieldReqs) {
       var reqValue, message;
       reqValue = fieldReqs.exact_selected;
-      message = "Select exactly {0} option";
+      message = "Select exactly " + reqValue + " option";
       message += (reqValue !== 1) ? "s" : ".";
-      return Helpers.format(message, reqValue);
+      return message;
     }
   };
+
+  MessageTranslations = {
+    'en' : Messages_en
+  };
+
+  Messages = MessageTranslations.en;
 
   /*
    * @private
@@ -460,6 +443,22 @@ if (this.jQuery === undefined) {
       throw new Error(ruleName + " is already defined as a rule.");
     }
     Regulate.Rules[ruleName] = testFn;
+  };
+
+  /*
+   * @public
+   * Adds the given translations to be used for internationalization.
+   */
+  Regulate.addTranslation = function (langName, translation) {
+    MessageTranslations[langName] = translation;
+  };
+
+  /*
+   * @public
+   * Use the corresponding message translations for the requested language.
+   */
+  Regulate.useTranslation = function (langName) {
+    Messages = MessageTranslations[langName];
   };
 
   root.Regulate = Regulate;

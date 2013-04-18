@@ -3,14 +3,26 @@
 /*global Regulate */
 
 var Messages_es = {
-  required: function (fieldName, fieldReqs, formReqs) {
+  required: function (fieldName, fieldReqs) {
     var singular = fieldName + ' esta requerido.';
     var plural = fieldName + ' estan requeridos.';
     var last = fieldName.charAt(fieldName.length - 1);
     return (last === 's') ? plural : singular;
   },
 
-  min_length: function (fieldName, fieldReqs, formReqs) {
+  email: function (fieldName, fieldReqs) {
+    return fieldName + " debe ser un correo valido.";
+  },
+
+  match_field: function (fieldName, fieldReqs, formReqs) {
+    var matchName, displayName, matchField;
+    matchField = fieldReqs.match_field;
+    matchName = formReqs[matchField].display_as || matchField;
+    displayName = fieldReqs.display_as || fieldReqs.name;
+    return displayName + " debe coincidir con " + matchName;
+  },
+
+  min_length: function (fieldName, fieldReqs) {
     return fieldName + ' debe tener un mínimo de ' + fieldReqs.min_length + ' caracteres.';
   },
   max_length: function (fieldName, fieldReqs) {
@@ -19,54 +31,54 @@ var Messages_es = {
 
   exact_length: function (fieldName, fieldReqs) {
     var exactLength = fieldReqs.exact_length;
-    return fieldName + ' debe tener exactamente ' + exactLength + ' caracteres.';
+    return fieldName + ' debe tener ' + exactLength + ' caracteres.';
   },
 
   min_checked: function (fieldName, fieldReqs) {
     var reqValue, message;
     reqValue = fieldReqs.min_checked;
-    message = "Chequa por lo menos " + reqValue + " checkbox";
-    message += (reqValue !== 1) ? "es" : ".";
+    singular = "Marque al menos " + reqValue + " casilla";
+    message += (reqValue !== 1) ? "s" : ".";
     return message;
   },
 
   max_checked: function (fieldName, fieldReqs) {
     var reqValue, message;
     reqValue = fieldReqs.max_checked;
-    message = "Check a maximum of " + reqValue + " checkbox";
-    message += (reqValue !== 1) ? "es" : ".";
+    message = "Marque un máximo de " + reqValue + " casilla";
+    message += (reqValue !== 1) ? "s" : ".";
     return message;
   },
 
   exact_checked: function (fieldName, fieldReqs) {
     var reqValue, message;
     reqValue = fieldReqs.exact_checked;
-    message = "Check exactly " + reqValue + " checkbox";
-    message += (reqValue !== 1) ? "es" : ".";
+    message = "Marque " + reqValue + " casilla";
+    message += (reqValue !== 1) ? "s" : ".";
     return message;
   },
 
   min_selected: function (fieldName, fieldReqs) {
     var reqValue, message;
     reqValue = fieldReqs.min_selected;
-    message = "Select atleast " + reqValue + " option";
-    message += (reqValue !== 1) ? "s" : ".";
+    message = "Seleccione al menos " + reqValue + " opcion";
+    message += (reqValue !== 1) ? "es" : ".";
     return message;
   },
 
   max_selected: function (fieldName, fieldReqs) {
     var reqValue, message;
     reqValue = fieldReqs.max_selected;
-    message = "Select a maximum of " + reqValue + " option";
-    message += (reqValue !== 1) ? "s" : ".";
+    message = "Seleccione un maximo de " + reqValue + " opcion";
+    message += (reqValue !== 1) ? "es" : ".";
     return message;
   },
 
   exact_selected: function (fieldName, fieldReqs) {
     var reqValue, message;
     reqValue = fieldReqs.exact_selected;
-    message = "Select exactly " + reqValue + " option";
-    message += (reqValue !== 1) ? "s" : ".";
+    message = "Seleccione " + reqValue + " opcion";
+    message += (reqValue !== 1) ? "es" : ".";
     return message;
   }
 };
@@ -110,6 +122,15 @@ $(function() {
     display_error: '#multivalues-error',
     display_as: 'Multiselect'
   }]);
+
+  Regulate.sampleForm.addTranslation('es', {
+    username: 'Nombre de Usuario',
+    email: 'Email',
+    password1: 'Clave',
+    password2: 'Confirmacion',
+    newsletters: 'Periodicos',
+    multivalues: 'MultiValores'
+  });
 
   Regulate.sampleForm.onSubmit(function(error, data) {
     if (error) {

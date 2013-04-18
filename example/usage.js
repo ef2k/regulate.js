@@ -43,7 +43,7 @@ $(function() {
   Regulate.sampleForm.onSubmit(function(error, data) {
     if (error) {
       console.error('Validation failed.');
-      console.log("These are the errors");
+      console.log("These are the errors ", error);
     } else {
       console.log('Validation passed');
     }

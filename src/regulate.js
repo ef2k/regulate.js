@@ -230,7 +230,7 @@ if (this.jQuery === undefined) {
    */
   Form = function (name, requirements) {
     this.name = name;
-    this.cbs = [];
+    this.cb = undefined;
     this.errorElems = {};
     this.isBrowser = false;
     this.translations = {};
@@ -262,12 +262,12 @@ if (this.jQuery === undefined) {
 
   /*
    * @private
-   * Calls all registered callbacks.
+   * Calls the registered onSubmit callback.
    */
   Form.prototype.notifySubmission = function (error, data) {
-    _.each(this.cbs, function (cb) {
-      cb(error, data);
-    });
+    if (this.cb) {
+      this.cb(error, data);
+    }
   };
 
   /*
@@ -313,7 +313,7 @@ if (this.jQuery === undefined) {
     }
 
     if (cb) {
-      self.cbs.push(cb);
+      self.cb = cb;
     }
 
     // Restructure the form values so it's easier to check against the rules.
@@ -417,16 +417,6 @@ if (this.jQuery === undefined) {
   };
 
   /*
-   * @private
-   * Adds a callback to be called after validation.
-   * @param cb Function - callback.
-   */
-  Form.prototype.addCb = function (cb) {
-    var self = this;
-    self.cbs.push(cb);
-  };
-
-  /*
    * @public
    * Registers a callback to be called after form submission and its validation.
    * @param cb Function - The callback to be called with validation results.
@@ -435,10 +425,10 @@ if (this.jQuery === undefined) {
    */
   Form.prototype.onSubmit = function (cb) {
     var self = this;
-    self.addCb(cb);
+    self.cb = cb;
     self.isBrowser = true;
 
-    $('#' + self.name).on('submit', function (e) {
+    $(root.document).on('submit', '#' + self.name, function (e) {
       e.preventDefault();
 
       // Clear previous errors

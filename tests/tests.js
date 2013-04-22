@@ -118,6 +118,13 @@ describe('Regulate', function () {
     {name: 'email2', value: 'foo@bar.com'}
   ];
 
+  var emptyObjData = [
+    {name: 'title', value: ''},
+    {name: 'company', value: ''},
+    {name: 'email1', value: ''},
+    {name: 'email2', value: ''}
+  ];
+
   it('should namespace my regulate object as a property of itself', function () {
     expect(Regulate.jobPost).toBeDefined();
   });
@@ -128,11 +135,22 @@ describe('Regulate', function () {
     expect(spyCb).toHaveBeenCalledWith(null, objData);
   });
 
-  it('should invalidate the given object and callback with an error', function () {
-    var spyCb2 = jasmine.createSpy();
+  it('should invalidate an empty object and callback with an error', function () {
+    var spyCb = jasmine.createSpy();
+    Regulate.jobPost.validate(emptyObjData, spyCb);
+    expect(spyCb).toHaveBeenCalled();
+  });
+
+  it('should invalidate an umatched field and callback with an error', function () {
+    var spyCb = jasmine.createSpy();
     objData[3].value = "unmatched@email.com";
-    Regulate.jobPost.validate(objData, spyCb2);
-    expect(spyCb2).toHaveBeenCalled();
+    Regulate.jobPost.validate(objData, spyCb);
+    expect(spyCb).toHaveBeenCalled();
     objData[3].value = "foo@bar.com";
+  });
+
+  it('should add a translation to the regulate object', function () {
+    Regulate.addTranslation('test', {});
+    expect(Regulate.Translations.test).toBeDefined();
   });
 });

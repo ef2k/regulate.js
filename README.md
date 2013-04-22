@@ -92,14 +92,18 @@ var fooTranslation = {
 
 // Add the translation...
 Regulate.addTranslation('foo', fooTranslation);
+```
 
-/* Or if you're adding more than one translation...
-  Regulate.addTranslations({
-    foo: fooTranslation,
-    bar: barTranslation,
-    // ...
-  });
-*/
+Or if you're adding more than one translation...
+
+```js
+Regulate.addTranslations({
+  // Note: You can drop the display_as fields if you wish and include it here instead.
+  en: englishTranslation,
+  foo: fooTranslation,
+  bar: barTranslation,
+  // ...
+});
 ```
 
 So this has added the `foo` translation. Before we start using `foo` we probably
@@ -124,36 +128,35 @@ Regulate.myForm.addTranslation('foo', {
   firstName: "Yo, first name",
   lastName: "Yo, last name"
 });
-
-/* If you're adding more than one translation...
-  Regulate.myForm.addTranslations({
-    foo: {
-      firstName: "Yo, first name",
-      lastName: "Yo, last name"
-    },
-    bar: {
-      //...
-    },
-    //...
-  });
-*/
 ```
 
-At this point regulate is still using english (`en`) to present the error messages. In
-order to start using the `foo` translation make a call to `Regulate.useTranslation`.
-This will present error messages using the `foo` translation as well as the corresponding
-translation for the individual forms.
+If you're adding more than one translation to your form...
+
+```js
+Regulate.myForm.addTranslations({
+  foo: {
+    firstName: "Yo, first name",
+    lastName: "Yo, last name"
+  },
+  //...
+});
+```
+
+To start using the `foo` translation make a call to `Regulate.useTranslation`.
 
 ```js
 // Use the foo translation
 Regulate.useTranslation('foo');
 ```
 
+This will present error messages using the `foo` translation as well as the corresponding
+translation for the individual forms.
+
 
 TODO
 ----
 
-* ~Internationalization (request).~
+* Internationalization (request).
 * A cleaner way to add custom error messages.
 * Validations that trigger onChange.
 * Partial form validations (request).

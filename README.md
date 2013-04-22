@@ -98,8 +98,6 @@ Or if you're adding more than one translation...
 
 ```js
 Regulate.addTranslations({
-  // Note: You can drop the display_as fields if you wish and include it here instead.
-  en: englishTranslation,
   foo: fooTranslation,
   bar: barTranslation,
   // ...
@@ -130,10 +128,15 @@ Regulate.myForm.addTranslation('foo', {
 });
 ```
 
-If you're adding more than one translation to your form...
+If you're adding more than one translation to your form. You can leave out the
+`display_as` fields and declare here instead:
 
 ```js
 Regulate.myForm.addTranslations({
+  en: {
+    firstName: "First name", // alternative to display_as
+    lastName: "Last name"
+  },
   foo: {
     firstName: "Yo, first name",
     lastName: "Yo, last name"

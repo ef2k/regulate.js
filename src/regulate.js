@@ -226,11 +226,7 @@ if (this.jQuery === undefined) {
    * Stores message functions that should always be included with the Messages,
    * regardless of current translation.
    */
-  messagesCore = {
-    foobar: function () {
-      console.log('from foobar ', arguments);
-    }
-  };
+  messagesCore = {};
 
   /*
    * @public

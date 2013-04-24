@@ -21,9 +21,10 @@ if (this.jQuery === undefined) {
 (function (root, _, $) {
   "use strict";
 
-  var Rules, Messages, Config, Form, Regulate, Translations, Messages_en;
+  var config, Rules, Messages, Form, Regulate, Translations, messagesCore,
+    messages_en;
 
-  Config = {
+  config = {
     language: 'en'
   };
 
@@ -126,9 +127,9 @@ if (this.jQuery === undefined) {
 
   /*
    * @private
-   * The following messages are generated after a failed validation.
+   * The following messages in english are used by default.
    */
-  Messages_en = {
+  messages_en = {
     required: function (fieldName, fieldReqs) {
       var lastChar, verb;
       lastChar = fieldName.charAt(fieldName.length - 1);
@@ -217,11 +218,26 @@ if (this.jQuery === undefined) {
    * Stores the message translations by their corresponding language.
    */
   Translations = {
-    en: Messages_en
+    en: messages_en
   };
 
-  /* Use the english translation by default. */
-  Messages = Translations.en;
+  /*
+   * @private
+   * Stores message functions that should always be included with the Messages,
+   * regardless of current translation.
+   */
+  messagesCore = {
+    foobar: function () {
+      console.log('from foobar ', arguments);
+    }
+  };
+
+  /*
+   * @public
+   * Messages are called after a failed validation.
+   * Note: Messages defaults to english (messages_en).
+   */
+  Messages = {};
 
   /*
    * @private
@@ -329,7 +345,7 @@ if (this.jQuery === undefined) {
     // Check form values against the validation requirements.
     _.each(self.reqs, function (fieldReqs, fieldName) {
       var fieldVals, error, displayName, fieldErrors = [],
-        translation = self.translations[Config.language];
+        translation = self.translations[config.language];
 
       // Inject the custom display_as for the current language if available.
       if (translation[fieldName]) {
@@ -344,7 +360,6 @@ if (this.jQuery === undefined) {
       fieldVals = transformedFieldValues[fieldName];
 
       displayName = fieldReqs.display_as || fieldName;
-      // displayName = self.translations[Config.language][fieldName] || fieldName;
 
       if (_.isEmpty(fieldVals)) {
         error = Messages.required(displayName, fieldReqs, self.reqs);
@@ -392,7 +407,7 @@ if (this.jQuery === undefined) {
    */
   Form.prototype.transformReqs = function (userRequirements) {
     var self = this, transformedReqs = {},
-      lang = self.translations[Config.language] = {};
+      lang = self.translations[config.language] = {};
 
     _.each(userRequirements, function (userReq) {
       var reqName, fieldReq = {}, fieldName = userReq.name, reqValue;
@@ -463,29 +478,11 @@ if (this.jQuery === undefined) {
    *    @return A boolean value that represents the validation result.
    */
   Regulate.registerRule = function (ruleName, testFn) {
-    if (Regulate.Rules[ruleName]) {
+    if (Rules[ruleName]) {
       throw new Error(ruleName + " is already defined as a rule.");
     }
-    Regulate.Rules[ruleName] = testFn;
+    Rules[ruleName] = testFn;
   };
-
-  /*
-   * @public
-   * Exposes all validation rules.
-   */
-  Regulate.Rules = Rules;
-
-  /*
-   * @public
-   * Exposes all error message generators.
-   */
-  Regulate.Messages = Messages;
-
-  /*
-   * @public
-   * Expose the translations.
-   */
-  Regulate.Translations = Translations;
 
   /*
    * @public
@@ -511,9 +508,37 @@ if (this.jQuery === undefined) {
    * Use the corresponding message translations for the requested language.
    */
   Regulate.useTranslation = function (langName) {
-    Config.language = langName;
+    if (!Translations[langName]) {
+      throw new Error(langName + ' translation not found.');
+    }
+    config.language = langName;
     Messages = Translations[langName];
+    _.each(messagesCore, function (msgFn, ruleName) {
+      Messages[ruleName] = msgFn;
+    });
   };
+
+  /* Use the english translation by default */
+  Regulate.useTranslation('en');
+
+  /*
+   * @public
+   * Exposes all validation rules.
+   */
+  Regulate.Rules = Rules;
+
+  /*
+   * @public
+   * Exposes all error message generators.
+   */
+  Regulate.Messages = Messages;
+  // debugger;
+
+  /*
+   * @public
+   * Expose the translations.
+   */
+  Regulate.Translations = Translations;
 
   root.Regulate = Regulate;
 

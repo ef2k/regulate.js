@@ -305,9 +305,6 @@ if (this.jQuery === undefined) {
     _.each(translations, function (translation, langName) {
       self.addTranslation(langName, translation);
     });
-    if (this.cb) {
-      this.cb(error, data);
-    }
   };
 
   /*
@@ -517,7 +514,7 @@ if (this.jQuery === undefined) {
     });
   };
 
-  /* Use the english translation by default */
+  /* Use english by default */
   Regulate.useTranslation('en');
 
   /*
@@ -531,7 +528,6 @@ if (this.jQuery === undefined) {
    * Exposes all error message generators.
    */
   Regulate.Messages = Messages;
-  // debugger;
 
   /*
    * @public

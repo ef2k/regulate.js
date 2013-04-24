@@ -45,10 +45,10 @@ $(function () {
   Regulate.sampleForm.addTranslations({
     es: {
       username: 'Nombre de usuario',
-      email: 'Correo electrónico',
+      email: 'Correo electrÃ³nico',
       password1: 'Clave',
       password2: 'Confirmacion',
-      newsletters: 'Periódicos',
+      newsletters: 'PeriÃ³dicos',
       multivalues: 'Multivalores'
     }
   });

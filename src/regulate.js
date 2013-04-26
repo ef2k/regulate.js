@@ -439,6 +439,13 @@ if (this.jQuery === undefined) {
     self.cb = cb;
     self.isBrowser = true;
 
+    $(root.document).on('change', '#' + self.name, function (e) {
+      var target = e.target, fieldObj = {};
+      fieldObj.name = target.name;
+      fieldObj.value = target.value;
+      self.validate([fieldObj]);
+    });
+
     $(root.document).on('submit', '#' + self.name, function (e) {
       e.preventDefault();
 

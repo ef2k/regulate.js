@@ -240,13 +240,19 @@ if (this.jQuery === undefined) {
    * @constructor
    * Represents a form with validation requirements.
    */
-  Form = function (name, requirements) {
+  Form = function (name, requirements, options) {
     this.name = name;
     this.cb = undefined;
     this.errorElems = {};
     this.isBrowser = false;
     this.translations = {};
     this.reqs = this.transformReqs(requirements);
+    this.options = {
+      validateOnChange: false
+    };
+    if (options && _.isObject(options)) {
+      this.options = _.extend(this.options, options);
+    }
   };
 
   /*
@@ -324,7 +330,7 @@ if (this.jQuery === undefined) {
       throw new Error("Field values must be supplied in order to validate.");
     }
 
-    if (cb) {
+    if (cb && _.isFunction(cb)) {
       self.cb = cb;
     }
 
@@ -429,31 +435,49 @@ if (this.jQuery === undefined) {
 
   /*
    * @public
-   * Registers a callback to be called after form submission and its validation.
+   * Registers a callback to be called after form submission.
    * @param cb Function - The callback to be called with validation results.
    *    @argument error
    *    @agument data
    */
   Form.prototype.onSubmit = function (cb) {
-    var self = this;
-    self.cb = cb;
+    var self = this, origCb = cb, formId = '#' + self.name,
+      clearErrors = function () {
+        _.each(self.errorElems, function (elem) {
+          $(elem).html('');
+        });
+      };
+
     self.isBrowser = true;
+    self.cb = origCb;
 
-    $(root.document).on('change', '#' + self.name, function (e) {
-      var target = e.target, fieldObj = {};
-      fieldObj.name = target.name;
-      fieldObj.value = target.value;
-      self.validate([fieldObj]);
-    });
+    if (self.options.validateOnChange) {
+      $(root.document).on('change', formId, function (e) {
+        var formData = $(this).serializeArray(),
+          targetName = e.target.name;
 
-    $(root.document).on('submit', '#' + self.name, function (e) {
-      e.preventDefault();
+        // HACK: Temporarily prevent validate() from displaying errors.
+        // self.isBrowser = false;
 
-      // Clear previous errors
-      _.each(self.errorElems, function (elem) {
-        $(elem).html('');
+        self.validate(formData, function (error, data) {
+          self.isBrowser = true;
+          self.cb = origCb;
+
+          // Clear any previous errors.
+          $(self.errorElems[targetName]).html('');
+
+          if (error && error[targetName]) {
+            var targetError = {};
+            targetError[targetName] = error[targetName];
+            self.displayErrors(targetError);
+          }
+        });
       });
+    }
 
+    $(root.document).on('submit', formId, function (e) {
+      e.preventDefault();
+      clearErrors();
       var formData = $(this).serializeArray();
       self.validate(formData);
     });
@@ -466,11 +490,11 @@ if (this.jQuery === undefined) {
    * @param name String - The name of the form to be validated.
    * @param formRules - Array - The required rules for validation.
    */
-  Regulate = function (name, formRules) {
+  Regulate = function (name, formRules, options) {
     if (Regulate[name]) {
       throw new Error(name + 'is already being validated');
     }
-    Regulate[name] = new Form(name, formRules);
+    Regulate[name] = new Form(name, formRules, options);
   };
 
   /*

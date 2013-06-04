@@ -39,7 +39,7 @@ $(function () {
       exact_selected: 2,
       display_error: '#multivalues-error',
       display_as: 'Multiselect'
-    }]);
+    }], {validateOnChange: true});
 
   // Add a translated version of this form's display_as fields.
   Regulate.sampleForm.addTranslations({

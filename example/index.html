@@ -13,16 +13,11 @@
   <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet" type="text/css" />
   <script src="bootstrap/js/bootstrap.js"></script>
 
-  <!--
-  <link href="gcp/prettify.css" rel="stylesheet" type="text/css" />
-  <script src="gcp/prettify.js"></script>
-  <script src="gcp/run_prettify.js"></script>
-  -->
-
   <link href="style.css" rel="stylesheet" type="text/css" />
 
   <meta charset="utf-8" />
 </head>
+
 <body>
 <div class="border-thick"></div>
 <div class='container'>
@@ -51,7 +46,7 @@
   <div class='row'>
     <div class="span12">
       <h2>Overview</h2>
-      <p class='lead'>Regulate is a form validation library that was built to be versatile and customizable. It runs in the browser and can also be installed as a <a href="#">Meteor package</a> using Meteorite or <a href="#">via npm</a> for use with Node.</p>
+      <p class='lead'>Regulate is a form validation library that was built to be versatile and customizable. It runs in the browser and can also be installed as a <a href="#">Meteor package</a> using Meteorite.</p>
     </div>
   </div>
 
@@ -105,17 +100,17 @@
     <div class='control-group'>
       <h5>Select 1 or 2 of these newspapers</h5>
       <label class='checkbox'>
-        <input type="checkbox" name="newsletters" value="nyt"/> 
+        <input type="checkbox" name="newsletters" value="nyt"/>
         New York Times
       </label>
 
       <label class='checkbox'>
-        <input type="checkbox" name="newsletters" value="nyp"/> 
+        <input type="checkbox" name="newsletters" value="nyp"/>
         New York Post
       </label>
 
       <label class='checkbox'>
-        <input type="checkbox" name="newsletters" value="ct"/> 
+        <input type="checkbox" name="newsletters" value="ct"/>
         Chicago Tribune
       </label>
       <div id="newsletters-error" class="cr-error"></div>
@@ -141,6 +136,17 @@
       <div id="multivalues-error" class="help-inline cr-error"></div>
     </div>
 
+    <div class='control-group'>
+    <h5>Upload an Image (jpg, png, gif) File</h5>
+      <input name='profileImage' type="file" />
+      <div id="profileImage-error" class="help-inline cr-error"></div>
+    </div>
+
+    <div class='control-group'>
+    <h5>Upload a Text or Markdown File</h5>
+      <input name='readmeFile' type="file" />
+      <div id="readmeFile-error" class="help-inline cr-error"></div>
+    </div>
 
     </fieldset>
     <input type='submit' class='btn'/>

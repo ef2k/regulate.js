@@ -30,6 +30,43 @@ if (this.jQuery === undefined) {
 
   /*
    * @private
+   * A namespace for helper functions.
+   */
+  Helpers = {
+
+    /*
+     * Formats a string. ie: format("{0} {1}", "hello", "world") => hello world
+     */
+    format: function (str) {
+      var i, args, s = str;
+      args = Array.prototype.splice.call(arguments, 1);
+
+      for (i = 0; i < args.length; i += 1) {
+        s = s.replace("{" + i + "}", args[i]);
+      }
+
+      return s;
+    },
+
+    /*
+     * Returns a human readable conversion of the supplied bytes.
+     * Thanks to thomasR @thomasethajar.
+     */
+    niceBytes: function (bytes) {
+      var i, sizes = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+      if (bytes === 0) {
+        return '0 bytes';
+      }
+      i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+      if (i === 0) {
+        return bytes + ' ' + sizes[i];
+      }
+      return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
+    }
+  };
+
+  /*
+   * @private
    * The object containing all validation rules.
    */
   Rules = {
@@ -122,6 +159,36 @@ if (this.jQuery === undefined) {
 
     max_selected: function (fieldValue, fieldReqs, fields) {
       return this.max_count('max_selected', fieldReqs, fields);
+    },
+
+    max_size: function (fieldValue, fieldReqs) {
+      return fieldValue <= fieldReqs.max_size;
+    },
+
+    accepted_files: function (fieldValue, fieldReqs, fields) {
+      var i, fieldObj, uploadedFileType,
+        acceptedFiles = fieldReqs.accepted_files;
+
+      fieldObj = _.filter(fields, function (field) {
+        return field.name === fieldReqs.name;
+      });
+
+      if (fieldObj.length > 0 && fieldObj[0].fileType && acceptedFiles) {
+        fieldObj = fieldObj[0];
+      } else {
+        return false;
+      }
+
+      acceptedFiles = acceptedFiles.toLowerCase().trim().split('|');
+      uploadedFileType = fieldObj.fileType;
+
+      for (i = 0; i < acceptedFiles.length; i += 1) {
+        if (uploadedFileType.indexOf(acceptedFiles[i].trim()) > -1) {
+          return true;
+        }
+      }
+
+      return false;
     }
   };
 
@@ -210,6 +277,24 @@ if (this.jQuery === undefined) {
       message = "Select exactly " + reqValue + " option";
       message += (reqValue !== 1) ? "s" : ".";
       return message;
+    },
+
+    max_size: function (fieldName, fieldReqs) {
+      var reqValue, message;
+      reqValue = fieldReqs.max_size;
+      message = "File cannot be larger than " + Helpers.niceBytes(reqValue) + ".";
+      return message;
+    },
+
+    accepted_files: function (fieldName, fieldReqs) {
+      var acceptedTypes = fieldReqs.accepted_files.split('|'),
+        message = "Not a valid file type. ";
+      if (acceptedTypes.length > 1) {
+        message += "Accepted types: " + acceptedTypes.join(', ');
+      } else {
+        message += "Upload a " + acceptedTypes[0];
+      }
+      message += ".";
     }
   };
 
@@ -331,7 +416,12 @@ if (this.jQuery === undefined) {
     // Restructure the form values so it's easier to check against the rules.
     // ie: {fieldName: [fieldVal, ...], ...}
     _.each(formFields, function (formField) {
-      var name = formField.name, value = formField.value.trim();
+      var name = formField.name, value = formField.value;
+
+      if (_.isString(value)) {
+        value = value.trim();
+      }
+
       transformedFieldValues[name] = transformedFieldValues[name] || [];
       if (value) {
         transformedFieldValues[name].push(value);
@@ -428,6 +518,38 @@ if (this.jQuery === undefined) {
   };
 
   /*
+   * @private
+   * Serializes the form data into an array, this includes `input type=file`
+   * elements which are ignored by jQuery's serializeArray.
+   * @param formElem Element - The Element object representing the form.
+   */
+  function getFormData(formElem) {
+    var formData = $(formElem).serializeArray(),
+      fileInputs = $(formElem).find("input[type=file]"),
+      files = [];
+
+    fileInputs.each(function () {
+      var fileSize, fileType, fieldName = this.name;
+
+      if (this.files.length > 0) {
+        fileSize = this.files[0].size;
+        fileType = this.files[0].type;
+      } else {
+        fileSize = 0;
+        fileType = '';
+      }
+      files.push({name: fieldName, value: fileSize, fileType: fileType, files: this.files});
+    });
+
+    _.each(files, function (fileObj) {
+      formData.push(fileObj);
+    });
+
+    return formData;
+  }
+
+
+  /*
    * @public
    * Registers a callback to be called after form submission and its validation.
    * @param cb Function - The callback to be called with validation results.
@@ -447,7 +569,7 @@ if (this.jQuery === undefined) {
         $(elem).html('');
       });
 
-      var formData = $(this).serializeArray();
+      var formData = getFormData(this);
       self.validate(formData);
     });
   };

@@ -7,7 +7,6 @@
 /*global Regulate*/
 
 describe('Rules',  function () {
-
   it('should check for the given minimum length', function () {
     expect(Regulate.Rules.min_length('foobar', {min_length:5})).toBe(true);
     expect(Regulate.Rules.min_length('foobar', {min_length:7})).toBe(false);
@@ -90,6 +89,21 @@ describe('Rules',  function () {
     expect(Regulate.Rules.max_selected(null, successReqs, fields)).toBe(true);
     expect(Regulate.Rules.max_selected(null, failReqs, fields)).toBe(false);
   });
+
+  it('should check for a maximum file size', function () {
+    var successReqs = {name: 'file', max_size: 1000};
+    var failReqs = {name: 'file', max_size: 500};
+    expect(Regulate.Rules.max_size(700, successReqs)).toBe(true);
+    expect(Regulate.Rules.max_selected(700, failReqs)).toBe(false);
+  });
+
+  it('should check for correct file type', function () {
+    var successReqs = {name: 'file', accepted_files: 'jpeg|gif|png'};
+    var failReqs = {name: 'file', accepted_files: 'markdown'};
+    var fields = [{name: 'file', value: 1000, fileType: 'image/jpeg'}];
+    expect(Regulate.Rules.accepted_files(1000, successReqs, fields)).toBe(true);
+    expect(Regulate.Rules.accepted_files(1000, failReqs, fields)).toBe(false);
+  });
 });
 
 describe('Regulate', function () {
@@ -118,6 +132,24 @@ describe('Regulate', function () {
     {name: 'email2', value: 'foo@bar.com'}
   ];
 
+  Regulate('allRequired', [
+    {name: 'f1'},
+    {name: 'f2'},
+    {name: 'f3'},
+    {name: 'f4'},
+    {name: 'f5'},
+    {name: 'f6'}
+  ]);
+
+  var nonTruthyData = [
+    {name: 'f1', value: 0},
+    {name: 'f2', value: null},
+    {name: 'f3', value: false},
+    {name: 'f4', value: undefined},
+    {name: 'f5', value: ''},
+    {name: 'f6', value: NaN}
+  ];
+
   it('should namespace my regulate object as a property of itself', function () {
     expect(Regulate.jobPost).toBeDefined();
   });
@@ -129,10 +161,24 @@ describe('Regulate', function () {
   });
 
   it('should invalidate the given object and callback with an error', function () {
-    var spyCb2 = jasmine.createSpy();
+    var spyCb = jasmine.createSpy();
     objData[3].value = "unmatched@email.com";
-    Regulate.jobPost.validate(objData, spyCb2);
-    expect(spyCb2).toHaveBeenCalled();
+    Regulate.jobPost.validate(objData, spyCb);
+    expect(spyCb).toHaveBeenCalled();
     objData[3].value = "foo@bar.com";
+  });
+
+  it ('should invalidate all fields that do not have truthy values', function () {
+    var spyCb = jasmine.createSpy();
+    Regulate.allRequired.validate(nonTruthyData, spyCb);
+    var mockError = {
+      f1: ["f1 is required."],
+      f2: ["f2 is required."],
+      f3: ["f3 is required."],
+      f4: ["f4 is required."],
+      f5: ["f5 is required."],
+      f6: ["f6 is required."],
+    };
+    expect(spyCb).toHaveBeenCalledWith(mockError, null);
   });
 });

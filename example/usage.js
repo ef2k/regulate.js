@@ -36,8 +36,20 @@ $(function() {
   }, {
     name: 'multivalues',
     exact_selected: 2,
+    display_as: 'Multiselect',
     display_error: '#multivalues-error',
-    display_as: 'Multiselect'
+  }, {
+    name: 'profileImage',
+    max_size: 1024 * 1024,
+    accepted_files: 'jpeg|png|gif',
+    display_as: 'Profile image',
+    display_error: '#profileImage-error'
+  }, {
+    name: 'readmeFile',
+    max_size: 1024 * 100,
+    accepted_files: 'text|markdown|pdf',
+    display_as: 'Readme file',
+    display_error: '#readmeFile-error'
   }]);
 
   Regulate.sampleForm.onSubmit(function(error, data) {

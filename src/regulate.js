@@ -478,7 +478,7 @@ if (this.jQuery === undefined) {
         fileSize = 0;
         fileType = '';
       }
-      files.push({name: fieldName, value: fileSize, fileType: fileType});
+      files.push({name: fieldName, value: fileSize, fileType: fileType, files: this.files});
     });
 
     _.each(files, function (fileObj) {

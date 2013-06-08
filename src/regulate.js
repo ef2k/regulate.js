@@ -22,7 +22,7 @@ if (this.jQuery === undefined) {
   "use strict";
 
   var config, Rules, Messages, Form, Regulate, Translations, messagesCore,
-    messages_en;
+    messages_en, Helpers;
 
   config = {
     language: 'en'
@@ -295,6 +295,7 @@ if (this.jQuery === undefined) {
         message += "Upload a " + acceptedTypes[0];
       }
       message += ".";
+      return message;
     }
   };
 

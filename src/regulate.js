@@ -493,8 +493,8 @@ if (this.jQuery === undefined) {
    * work with. ie: {fieldName1: [{fieldRequirements}, ...], fieldName2: ...}
    */
   Form.prototype.transformReqs = function (userRequirements) {
-    var self = this, transformedReqs = {},
-      lang = self.translations[config.language] = {};
+    var self = this, transformedReqs = {}, lang;
+    lang = this.translations[config.language] = {};
 
     _.each(userRequirements, function (userReq) {
       var reqName, fieldReq = {}, fieldName = userReq.name, reqValue;

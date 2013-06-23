@@ -1,13 +1,24 @@
 Regulate.js
 ===========
 
-Regulate is a versatile form validation library (still in the works).
+Regulate is a versatile form validation library (usable, but still under development).
 
 Dependencies
 ------------
 
 * Underscore 1.0.0+
 * jQuery 1.7.0+
+
+What it does
+------------
+Regulate intercepts the onSubmit event for your forms and validates them according to your requirements.
+It then reports back with the data if validation passed or with the errors if validation failed.
+
+What it doesn't do
+------------------
+* Regulate does not submit the data, it merely validates it and reports back with a result.
+* Regulate supports validations for fields that should match (like for passwords), but doesn't support
+fields whose validation requirements depend on the value of other fields.
 
 Usage
 -----
@@ -232,10 +243,18 @@ translation for the individual forms.
 
 TODO
 ----
+**Next**
 
-* Internationalization (request).
-* A cleaner way to add custom error messages.
 * Validations that trigger onChange.
+
+**Soon**
+
+* A cleaner way to add/override custom error messages.
 * Partial form validations (request).
 * Complete documentation.
 * Moar rules.
+
+
+Contibute
+---------
+I appreciate your feedback, feel free to report issues, suggestions, and PRs.

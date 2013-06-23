@@ -3,7 +3,7 @@
  * http://github.com/eddflrs/regulate.js
  * @author Eddie Flores
  * @license MIT License
- * @version 0.1.3.3
+ * @version 0.1.3.4
  */
 
 /*jslint indent: 2 */
@@ -22,8 +22,12 @@ if (this.jQuery === undefined) {
   "use strict";
 
   var config, Rules, Messages, Form, Regulate, Translations, messagesCore,
-    messages_en, Helpers;
+    messages_en, helpers;
 
+  /*
+   * @private
+   * Used internally.
+   */
   config = {
     language: 'en'
   };
@@ -32,21 +36,7 @@ if (this.jQuery === undefined) {
    * @private
    * A namespace for helper functions.
    */
-  Helpers = {
-
-    /*
-     * Formats a string. ie: format("{0} {1}", "hello", "world") => hello world
-     */
-    format: function (str) {
-      var i, args, s = str;
-      args = Array.prototype.splice.call(arguments, 1);
-
-      for (i = 0; i < args.length; i += 1) {
-        s = s.replace("{" + i + "}", args[i]);
-      }
-
-      return s;
-    },
+  helpers = {
 
     /*
      * Returns a human readable conversion of the supplied bytes.
@@ -282,7 +272,7 @@ if (this.jQuery === undefined) {
     max_size: function (fieldName, fieldReqs) {
       var reqValue, message;
       reqValue = fieldReqs.max_size;
-      message = "File cannot be larger than " + Helpers.niceBytes(reqValue) + ".";
+      message = "File cannot be larger than " + helpers.niceBytes(reqValue) + ".";
       return message;
     },
 
@@ -381,10 +371,9 @@ if (this.jQuery === undefined) {
 
   /*
    * @public
-   * Adds the given translation to the form.
-   * @param langName String - Identifier for the language. ie: en, es, it, etc.
-   * @param translation Object - Should contain a map of the fieldName to the
-   *  translated display name. ie: {fieldName1: 'Field Name 1', ...}
+   * Adds the given translations to the form.
+   * @param translations Array - Translation objects should be of the following
+   * form: {fieldName: 'Field Name Translated'}
    */
   Form.prototype.addTranslations = function (translations) {
     var self = this;
@@ -435,7 +424,7 @@ if (this.jQuery === undefined) {
         translation = self.translations[config.language];
 
       // Inject the custom display_as for the current language if available.
-      if (translation[fieldName]) {
+      if (translation && translation[fieldName]) {
         fieldReqs.display_as = translation[fieldName];
       }
 
@@ -520,9 +509,9 @@ if (this.jQuery === undefined) {
 
   /*
    * @private
-   * Serializes the form data into an array, this includes `input type=file`
-   * elements which are ignored by jQuery's serializeArray.
-   * @param formElem Element - The Element object representing the form.
+   * Serializes the form data into an array, this includes metadata of
+   * `input type=file`elements which are ignored by jQuery's serializeArray.
+   * @param formElem Element - The DOM Element object representing the form.
    */
   function getFormData(formElem) {
     var formData = $(formElem).serializeArray(),
@@ -548,7 +537,6 @@ if (this.jQuery === undefined) {
 
     return formData;
   }
-
 
   /*
    * @public

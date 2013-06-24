@@ -1,9 +1,10 @@
 // usage.js
 
-/*global Regulate */
+/*global Regulate, $ */
 
-$(function() {
+$(function () {
 
+  // Register the form and its requirements.
   Regulate('sampleForm',
   [{
     name: 'username',
@@ -52,12 +53,24 @@ $(function() {
     display_error: '#readmeFile-error'
   }]);
 
-  Regulate.sampleForm.onSubmit(function(error, data) {
+  // Add a translated version of this form's display_as fields.
+  Regulate.sampleForm.addTranslations({
+    es: {
+      username: 'Nombre de usuario',
+      email: 'Correo electrónico',
+      password1: 'Clave',
+      password2: 'Confirmacion',
+      newsletters: 'Periódicos',
+      multivalues: 'Multivalores'
+    }
+  });
+
+  // Register a handler for the onSubmit event of the form.
+  Regulate.sampleForm.onSubmit(function (error, data) {
     if (error) {
-      console.error('Validation failed.');
-      console.log("These are the errors ", error);
+      console.error('Validation failed.', error);
     } else {
-      console.log('Validation passed');
+      console.log('Validation passed.', data);
     }
   });
 });

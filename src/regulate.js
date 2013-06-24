@@ -3,7 +3,7 @@
  * http://github.com/eddflrs/regulate.js
  * @author Eddie Flores
  * @license MIT License
- * @version 0.1.3.3
+ * @version 0.1.3.4
  */
 
 /*jslint indent: 2 */
@@ -21,27 +21,22 @@ if (this.jQuery === undefined) {
 (function (root, _, $) {
   "use strict";
 
-  var Helpers, Rules, Messages, Form, Regulate;
+  var config, Rules, Messages, Form, Regulate, Translations, messagesCore,
+    messages_en, helpers;
+
+  /*
+   * @private
+   * Used internally.
+   */
+  config = {
+    language: 'en'
+  };
 
   /*
    * @private
    * A namespace for helper functions.
    */
-  Helpers = {
-
-    /*
-     * Formats a string. ie: format("{0} {1}", "hello", "world") => hello world
-     */
-    format: function (str) {
-      var i, args, s = str;
-      args = Array.prototype.splice.call(arguments, 1);
-
-      for (i = 0; i < args.length; i += 1) {
-        s = s.replace("{" + i + "}", args[i]);
-      }
-
-      return s;
-    },
+  helpers = {
 
     /*
      * Returns a human readable conversion of the supplied bytes.
@@ -189,97 +184,95 @@ if (this.jQuery === undefined) {
 
   /*
    * @private
-   * The following messages are generated after a failed validation.
+   * The following messages in english are used by default.
    */
-  Messages = {
-    required: function (fieldName) {
-      var message, lastChar, verb;
-      message = "{0} {1} required.";
+  messages_en = {
+    required: function (fieldName, fieldReqs) {
+      var lastChar, verb;
       lastChar = fieldName.charAt(fieldName.length - 1);
       verb = (lastChar === 's') ? 'are' : 'is';
-      return Helpers.format(message, fieldName, verb);
+      return fieldName + " " + verb + " required.";
     },
 
-    email: function (fieldName) {
-      var message = "{0} must be a valid email.";
-      return Helpers.format(message, fieldName);
+    email: function (fieldName, fieldReqs) {
+      return fieldName + " must be a valid email.";
     },
 
     match_field: function (fieldName, fieldReqs, formReqs) {
-      var matchName, displayName, matchField, message = "{0} must match {1}.";
+      var matchName, displayName, matchField;
       matchField = fieldReqs.match_field;
       matchName = formReqs[matchField].display_as || matchField;
       displayName = fieldReqs.display_as || fieldReqs.name;
-      return Helpers.format(message, displayName, matchName);
+      return displayName + " must match " + matchName;
     },
 
     max_length: function (fieldName, fieldReqs) {
-      var message = "{0} must have a maximum length of {1}.";
-      return Helpers.format(message, fieldName, fieldReqs.max_length);
+      var maxLength = fieldReqs.max_length;
+      return fieldName + " must have a maximum length of " + maxLength + ".";
     },
 
     min_length: function (fieldName, fieldReqs) {
-      var message = "{0} must have a minimum length of {1}.";
-      return Helpers.format(message, fieldName, fieldReqs.min_length);
+      var minLength = fieldReqs.min_length;
+      return fieldName + " must have a minimum length of " + minLength + ".";
     },
 
     exact_length: function (fieldName, fieldReqs) {
-      var message = "{0} must have an exact length of {1}.";
-      return Helpers.format(message, fieldName, fieldReqs.exact_length);
+      var exactLength = fieldReqs.exact_length;
+      return fieldName + " must have an exact length of " + exactLength + ".";
     },
 
     min_checked: function (fieldName, fieldReqs) {
       var reqValue, message;
       reqValue = fieldReqs.min_checked;
-      message = "Check atleast {0} checkbox";
-      message += (reqValue !== 1) ? "es." : ".";
-      return Helpers.format(message, reqValue);
+      message = "Check atleast " + reqValue + " checkbox";
+      message += (reqValue !== 1) ? "es" : ".";
+      return message;
     },
 
     max_checked: function (fieldName, fieldReqs) {
       var reqValue, message;
       reqValue = fieldReqs.max_checked;
-      message = "Check a maximum of {0} checkbox";
-      message += (reqValue !== 1) ? "es." : ".";
-      return Helpers.format(message, reqValue);
+      message = "Check a maximum of " + reqValue + " checkbox";
+      message += (reqValue !== 1) ? "es" : ".";
+      return message;
     },
 
     exact_checked: function (fieldName, fieldReqs) {
       var reqValue, message;
       reqValue = fieldReqs.exact_checked;
-      message = "Check exactly {0} checkboxes";
-      message += (reqValue !== 1) ? "es." : ".";
-      return Helpers.format(message, reqValue);
+      message = "Check exactly " + reqValue + " checkbox";
+      message += (reqValue !== 1) ? "es" : ".";
+      return message;
     },
 
     min_selected: function (fieldName, fieldReqs) {
       var reqValue, message;
       reqValue = fieldReqs.min_selected;
-      message = "Select atleast {0} option";
-      message += (reqValue !== 1) ? "s." : ".";
-      return Helpers.format(message, reqValue);
+      message = "Select atleast " + reqValue + " option";
+      message += (reqValue !== 1) ? "s" : ".";
+      return message;
     },
 
     max_selected: function (fieldName, fieldReqs) {
       var reqValue, message;
       reqValue = fieldReqs.max_selected;
-      message = "Select a maximum of {0} option";
-      message += (reqValue !== 1) ? "s." : ".";
-      return Helpers.format(message, reqValue);
+      message = "Select a maximum of " + reqValue + " option";
+      message += (reqValue !== 1) ? "s" : ".";
+      return message;
     },
 
     exact_selected: function (fieldName, fieldReqs) {
       var reqValue, message;
       reqValue = fieldReqs.exact_selected;
-      message = "Select exactly {0} option";
-      message += (reqValue !== 1) ? "s." : ".";
-      return Helpers.format(message, reqValue);
+      message = "Select exactly " + reqValue + " option";
+      message += (reqValue !== 1) ? "s" : ".";
+      return message;
     },
 
     max_size: function (fieldName, fieldReqs) {
       var reqValue, message;
       reqValue = fieldReqs.max_size;
-      message = "File cannot be larger than " + Helpers.niceBytes(reqValue) + ".";
+      message = "File cannot be larger than " + helpers.niceBytes(reqValue) + ".";
       return message;
     },
 
@@ -298,6 +291,28 @@ if (this.jQuery === undefined) {
 
   /*
    * @private
+   * Stores the message translations by their corresponding language.
+   */
+  Translations = {
+    en: messages_en
+  };
+
+  /*
+   * @private
+   * Stores message functions that should always be included with the Messages,
+   * regardless of current translation.
+   */
+  messagesCore = {};
+
+  /*
+   * @public
+   * Messages are called after a failed validation.
+   * Note: Messages defaults to english (messages_en).
+   */
+  Messages = {};
+
+  /*
+   * @private
    * @constructor
    * Represents a form with validation requirements.
    */
@@ -306,6 +321,7 @@ if (this.jQuery === undefined) {
     this.cb = undefined;
     this.errorElems = {};
     this.isBrowser = false;
+    this.translations = {};
     this.reqs = this.transformReqs(requirements);
   };
 
@@ -344,6 +360,30 @@ if (this.jQuery === undefined) {
 
   /*
    * @public
+   * Adds the given translation to the form.
+   * @param langName String - Identifier for the language. ie: en, es, it, etc.
+   * @param translation Object - Should contain a map of the fieldName to the
+   *  translated display name. ie: {fieldName1: 'Field Name 1', ...}
+   */
+  Form.prototype.addTranslation = function (langName, translation) {
+    this.translations[langName] = translation;
+  };
+
+  /*
+   * @public
+   * Adds the given translations to the form.
+   * @param translations Array - Translation objects should be of the following
+   * form: {fieldName: 'Field Name Translated'}
+   */
+  Form.prototype.addTranslations = function (translations) {
+    var self = this;
+    _.each(translations, function (translation, langName) {
+      self.addTranslation(langName, translation);
+    });
+  };
+
+  /*
+   * @public
    * Applies the validation rules on the given array (formFields) and
    * calls back (cb) with `error` and `data` arguments.
    *
@@ -363,7 +403,7 @@ if (this.jQuery === undefined) {
       self.cb = cb;
     }
 
-    // Restructure the form values so it's easier to check against the rules
+    // Restructure the form values so it's easier to check against the rules.
     // ie: {fieldName: [fieldVal, ...], ...}
     _.each(formFields, function (formField) {
       var name = formField.name, value = formField.value;
@@ -380,7 +420,13 @@ if (this.jQuery === undefined) {
 
     // Check form values against the validation requirements.
     _.each(self.reqs, function (fieldReqs, fieldName) {
-      var fieldVals, error, displayName, fieldErrors = [];
+      var fieldVals, error, displayName, fieldErrors = [],
+        translation = self.translations[config.language];
+
+      // Inject the custom display_as for the current language if available.
+      if (translation && translation[fieldName]) {
+        fieldReqs.display_as = translation[fieldName];
+      }
 
       // Compensate for any missing form values (checkboxes, multiselects).
       if (!transformedFieldValues[fieldName]) {
@@ -389,8 +435,9 @@ if (this.jQuery === undefined) {
 
       fieldVals = transformedFieldValues[fieldName];
 
+      displayName = fieldReqs.display_as || fieldName;
+
       if (_.isEmpty(fieldVals)) {
-        displayName = fieldReqs.display_as || fieldName;
         error = Messages.required(displayName, fieldReqs, self.reqs);
         fieldErrors.push(error);
       } else {
@@ -400,7 +447,6 @@ if (this.jQuery === undefined) {
               var testResult = Rules[reqName](fieldVal, fieldReqs, formFields);
               if (!testResult) {
                 if (Messages[reqName]) {
-                  displayName = fieldReqs.display_as || fieldName;
                   error = Messages[reqName](displayName, fieldReqs, self.reqs);
                 } else {
                   error = reqName;
@@ -436,16 +482,20 @@ if (this.jQuery === undefined) {
    * work with. ie: {fieldName1: [{fieldRequirements}, ...], fieldName2: ...}
    */
   Form.prototype.transformReqs = function (userRequirements) {
-    var self = this, transformedReqs = {};
+    var self = this, transformedReqs = {}, lang;
+    lang = this.translations[config.language] = {};
 
     _.each(userRequirements, function (userReq) {
-      var reqName, fieldReq = {}, fieldName = userReq.name;
+      var reqName, fieldReq = {}, fieldName = userReq.name, reqValue;
       for (reqName in userReq) {
         if (userReq.hasOwnProperty(reqName)) {
+          reqValue = userReq[reqName];
           if (reqName === 'display_error') {
-            self.errorElems[fieldName] = userReq[reqName];
+            self.errorElems[fieldName] = reqValue;
+          } else if (reqName === 'display_as') {
+            lang[fieldName] = reqValue;
           } else {
-            fieldReq[reqName] = userReq[reqName];
+            fieldReq[reqName] = reqValue;
           }
         }
       }
@@ -459,9 +509,9 @@ if (this.jQuery === undefined) {
 
   /*
    * @private
-   * Serializes the form data into an array, this includes `input type=file`
-   * elements which are ignored by jQuery's serializeArray.
-   * @param formElem Element - The Element object representing the form.
+   * Serializes the form data into an array, this includes metadata of
+   * `input type=file`elements which are ignored by jQuery's serializeArray.
+   * @param formElem Element - The DOM Element object representing the form.
    */
   function getFormData(formElem) {
     var formData = $(formElem).serializeArray(),
@@ -487,7 +537,6 @@ if (this.jQuery === undefined) {
 
     return formData;
   }
-
 
   /*
    * @public
@@ -530,6 +579,57 @@ if (this.jQuery === undefined) {
 
   /*
    * @public
+   * Registers an user defined rule.
+   * @param ruleName String - The name of the rule.
+   * @param testFn Function - The function to be executed during validation.
+   *    @return A boolean value that represents the validation result.
+   */
+  Regulate.registerRule = function (ruleName, testFn) {
+    if (Rules[ruleName]) {
+      throw new Error(ruleName + " is already defined as a rule.");
+    }
+    Rules[ruleName] = testFn;
+  };
+
+  /*
+   * @public
+   * Adds the given translation to the i18n languages.
+   */
+  Regulate.addTranslation = function (langName, translation) {
+    Translations[langName] = translation;
+  };
+
+  /*
+   * @public
+   * Adds the given translations to the i18n languages.
+   */
+  Regulate.addTranslations = function (translations) {
+    var self = this;
+    _.each(translations, function (translation, langName) {
+      self.addTranslation(langName, translation);
+    });
+  };
+
+  /*
+   * @public
+   * Use the corresponding message translations for the requested language.
+   */
+  Regulate.useTranslation = function (langName) {
+    if (!Translations[langName]) {
+      throw new Error(langName + ' translation not found.');
+    }
+    config.language = langName;
+    Messages = Translations[langName];
+    _.each(messagesCore, function (msgFn, ruleName) {
+      Messages[ruleName] = msgFn;
+    });
+  };
+
+  /* Use english by default */
+  Regulate.useTranslation('en');
+
+  /*
+   * @public
    * Exposes all validation rules.
    */
   Regulate.Rules = Rules;
@@ -542,17 +642,9 @@ if (this.jQuery === undefined) {
 
   /*
    * @public
-   * Registers an user defined rule.
-   * @param ruleName String - The name of the rule.
-   * @param testFn Function - The function to be executed during validation.
-   *    @return A boolean value that represents the validation result.
+   * Expose the translations.
    */
-  Regulate.registerRule = function (ruleName, testFn) {
-    if (Regulate.Rules[ruleName]) {
-      throw new Error(ruleName + " is already defined as a rule.");
-    }
-    Regulate.Rules[ruleName] = testFn;
-  };
+  Regulate.Translations = Translations;
 
   root.Regulate = Regulate;
 

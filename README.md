@@ -293,6 +293,6 @@ TODO
 * Moar rules.
 
 
-Contibute
----------
+Contribute
+----------
 I appreciate your feedback, feel free to report issues, suggestions, and PRs.

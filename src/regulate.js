@@ -3,7 +3,7 @@
  * http://github.com/eddflrs/regulate.js
  * @author Eddie Flores
  * @license MIT License
- * @version 0.1.3.4
+ * @version 0.1.3.5
  */
 
 /*jslint indent: 2 */
@@ -438,7 +438,11 @@ if (this.jQuery === undefined) {
       displayName = fieldReqs.display_as || fieldName;
 
       if (_.isEmpty(fieldVals)) {
-        error = Messages.required(displayName, fieldReqs, self.reqs);
+        if (_.isObject(fieldReqs.error) && fieldReqs.error.required) {
+          error = fieldReqs.error.required;
+        } else {
+          error = Messages.required(displayName, fieldReqs, self.reqs);
+        }
         fieldErrors.push(error);
       } else {
         _.each(fieldReqs, function (reqVal, reqName) {
@@ -446,7 +450,9 @@ if (this.jQuery === undefined) {
             _.each(fieldVals, function (fieldVal) {
               var testResult = Rules[reqName](fieldVal, fieldReqs, formFields);
               if (!testResult) {
-                if (Messages[reqName]) {
+                if (_.isObject(fieldReqs.error) && fieldReqs.error[reqName]) {
+                  error = fieldReqs.error[reqName];
+                } else if (Messages[reqName]) {
                   error = Messages[reqName](displayName, fieldReqs, self.reqs);
                 } else {
                   error = reqName;
@@ -462,6 +468,10 @@ if (this.jQuery === undefined) {
       }
 
       if (fieldErrors.length > 0) {
+        if (_.isString(fieldReqs.error)) {
+          fieldErrors = []; // override errors with the one given by the user.
+          fieldErrors.push(fieldReqs.error);
+        }
         errors[fieldName] = fieldErrors;
       }
     });
@@ -589,6 +599,17 @@ if (this.jQuery === undefined) {
       throw new Error(ruleName + " is already defined as a rule.");
     }
     Rules[ruleName] = testFn;
+  };
+
+  /*
+   * @public
+   * Registers an user defined message generator.
+   * @param ruleName String - The name of the rule that will use this message.
+   * @param messageFn Function - The function that will generate the error message.
+   *    @return A string that will be used as the error message.
+   */
+  Regulate.registerMessage = function (ruleName, messageFn) {
+    Messages[ruleName] = messageFn;
   };
 
   /*

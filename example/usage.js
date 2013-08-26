@@ -11,12 +11,19 @@ $(function () {
     min_length: 6,
     max_length: 18,
     display_as: 'Username',
-    display_error: '#username-error'
+    display_error: '#username-error',
+    unique: true,
+    error: {
+      required: "The username is required.",
+      min_length: "The minimum length is 6 characters.",
+      max_length: "The maximum length is 18 characters. Use a shorter username."
+    }
   }, {
     name: 'email',
     email: true,
     display_as: 'Email',
-    display_error: '#email-error'
+    display_error: '#email-error',
+    error: "Enter a valid email address"
   }, {
     name: 'password1',
     min_length: 6,
@@ -53,6 +60,18 @@ $(function () {
     display_error: '#readmeFile-error'
   }]);
 
+  
+  // Create a custom rule that checks for uniqueness.
+  Regulate.registerRule('unique', function (fieldValue) {
+    var taken = 'administrator';
+    return fieldValue !== taken;
+  });
+
+  // Assign an error message to the unique rule.
+  Regulate.registerMessage('unique', function (fieldName) {
+    return fieldName + " is already taken.";
+  });
+
   // Add a translated version of this form's display_as fields.
   Regulate.sampleForm.addTranslations({
     es: {
@@ -71,6 +90,7 @@ $(function () {
       console.error('Validation failed.', error);
     } else {
       console.log('Validation passed.', data);
+      alert("Success!");
     }
   });
 });

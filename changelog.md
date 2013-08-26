@@ -1,6 +1,7 @@
 Changelog for Regulate.js 
 =========================
 
+* 0.1.3.5 - Adds custom error messages that can be included at the time of declaring field requirements.
 * 0.1.3.4 - Adds i18n support.
 * 0.1.3.3 - Adds support for `input type='file'`.
 * 0.1.3.2 - Changes array of onSubmit cbs to a single cb. Add support for future DOM elements.

@@ -560,7 +560,14 @@ if (this.jQuery === undefined) {
     self.cb = cb;
     self.isBrowser = true;
 
-    $(root.document).on('submit', '#' + self.name, function (e) {
+    var name;
+    if(self.name[0] === '#' ||  self.name[0] === "." ) {
+      name = self.name;
+    }else{ // this line gives backwards compatibility
+      name = "#" + self.name;
+    }
+
+    $(root.document).on('submit', name, function (e) {
       e.preventDefault();
 
       // Clear previous errors

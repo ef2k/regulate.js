@@ -28,6 +28,11 @@ describe('Rules',  function () {
     expect(Regulate.Rules.email('foo@bar', {email: true})).toBe(false);
   });
 
+  it('should check for a regex match', function () {
+    expect(Regulate.Rules.match('http://www.google.com', {match:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/})).toBe(true);
+    expect(Regulate.Rules.match('google', {match:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/})).toBe(false);
+  });
+
   it('should check that the value matches a value in another field', function () {
     var successReqs = {match_field: 'baz'};
     var failReqs = {match_field: 'zab'};

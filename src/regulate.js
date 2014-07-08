@@ -179,7 +179,11 @@ if (this.jQuery === undefined) {
       }
 
       return false;
-    }
+    },
+
+    match: function(str, rule) {
+      return rule.match.test(str);
+    },
   };
 
   /*
@@ -286,6 +290,10 @@ if (this.jQuery === undefined) {
       }
       message += ".";
       return message;
+    },
+
+    match: function(fieldName, fieldReqs) {
+      return fieldName + " must be valid.";
     }
   };
 

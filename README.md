@@ -1,7 +1,7 @@
 Regulate.js
 ===========
 
-Regulate is a versatile form validation library (usable, but still under development).
+Regulate is a versatile form validation library (no longer maintained, PRs welcome).
 
 Dependencies
 ------------
